@@ -1,6 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -11,23 +10,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LibraryIcon from '@material-ui/icons/CloudCircle';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import {
-  amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
-  green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
-  purple, red, teal, yellow
+    amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
+    green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
+    purple, red, teal, yellow
   } from '@material-ui/core/colors';
-
-const styles = theme => ({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  }
-});
 
 const SettingsDrawer = (props) => {
 
-  const colors = [
+  const paletteTypes = [
+    {name: 'Dark Theme', value: 'dark'},
+    {name: 'Light Theme', value: 'light'}
+  ];
+
+  const paletteColors = [
     {name: "Amber", value: amber},
     {name: "Blue", value: blue},
     {name: "Blue Gray", value: blueGrey},
@@ -49,8 +44,14 @@ const SettingsDrawer = (props) => {
     {name: "Yellow", value: yellow}
   ];
 
-  const list = colors.map((color, index) =>
-    <ListItem key={index} onClick={() => props.onThemeColorSelect(color.value)} button>
+  const typeList = paletteTypes.map((type, index) =>
+    <ListItem key={index} onClick={() => props.onPaletteTypeSelect(type.value)} button>
+      <ListItemText primary={type.name} />
+    </ListItem>
+  );
+
+  const colorList = paletteColors.map((color, index) =>
+    <ListItem key={index} onClick={() => props.onPaletteColorSelect(color.value)} button>
       <ListItemText primary={color.name} />
     </ListItem>
   );
@@ -62,10 +63,12 @@ const SettingsDrawer = (props) => {
       anchor="right"
     >
       <List component="nav">
-        {list}
+        {typeList}
+        <Divider />
+        {colorList}
       </List>
     </Drawer>
   )
 }
 
-export default withStyles(styles)(SettingsDrawer);
+export default SettingsDrawer;
