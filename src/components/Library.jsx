@@ -1,7 +1,6 @@
 import React from 'react';
 import { findAllArtists, findAllAlbums, findAllSongs } from '../common/rest';
 import { isEmpty } from '../common/functions';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -16,7 +15,11 @@ import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    width: '100%'
+  },
+  panelList: {
+    overflowY: 'auto',
+    maxHeight: '150px'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -34,107 +37,132 @@ class Library extends React.Component {
   constructor() {
     super();
     this.state = {
-      expanded: null,
       artists: [],
       albums: [],
       songs: [],
       selectedArtist: {},
       selectedAlbum: {},
-      selectedSong: {}
+      selectedSong: {},
+      selectedPanel: null
     };
     findAllArtists()
       .then(artists => this.setState({ artists }));
   }
 
-  setArtist = (selectedArtist) => {
-    this.setState({ selectedArtist, expanded: false });
-    findAllAlbums(selectedArtist.id)
+  setArtist = (artist) => {
+    this.setState({
+      selectedArtist: artist,
+      selectedAlbum: {},
+      albums: [],
+      selectedSong: {},
+      songs: [],
+      selectedPanel: false
+    });
+    findAllAlbums(artist.id)
       .then(albums => this.setState({ albums }));
   };
 
-  setAlbum = (selectedAlbum) => {
-    this.setState({ selectedAlbum, expanded: false });
-    findAllSongs(this.state.selectedArtist.id, selectedAlbum.id)
+  setAlbum = (album) => {
+    this.setState({
+      selectedAlbum: album,
+      selectedSong: {},
+      songs: [],
+      selectedPanel: false
+    });
+    findAllSongs(this.state.selectedArtist.id, album.id)
       .then(songs => this.setState({ songs }));
   }
 
-  setSong = (selectedSong) => {
-    this.setState({ selectedSong, expanded: false });
+  setSong = (song) => {
+    this.setState({
+      selectedSong: song,
+      selectedPanel: false
+    });
+    this.props.onSelect(this.state.selectedArtist, this.state.selectedAlbum, song);
   }
 
-  handleChange = panel => (event, expanded) => {
-    this.setState({ expanded: expanded ? panel : false });
+  handlePanelSelection = (panel) => {
+    this.setState({
+      selectedPanel: this.state.selectedPanel != panel
+        ? panel
+        : false
+    });
   };
+
+  createMediaList = (type, list) =>
+    !isEmpty(list)
+      ? <List component="nav">
+          { list.map((item, index) =>
+            <ListItem
+              key={index}
+              button
+              onClick={
+                type == 'artists'
+                  ? () => this.setArtist(item)
+                  : type == 'albums'
+                    ? () => this.setAlbum(item)
+                    : () => this.setSong(item)
+              }
+            >
+              <ListItemText primary={item.name} />
+            </ListItem>
+          )}
+        </List>
+      : <LoadingIndicator />
 
   render() {
     const { classes } = this.props;
-    const { expanded } = this.state;
-
+    const { selectedPanel } = this.state;
     return (
       <div className={classes.root}>
         <ExpansionPanel
-          expanded={expanded === 'panel1'}
-          onChange={this.handleChange('panel1')}
+          expanded={selectedPanel == 'artistPanel'}
+          onChange={() => this.handlePanelSelection('artistPanel')}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Artist</Typography>
-            <Typography className={classes.secondaryHeading}>{this.state.selectedArtist.name}</Typography>
+            <Typography className={classes.heading}>
+              Artist
+            </Typography>
+            <Typography className={classes.secondaryHeading}>
+              {this.state.selectedArtist.name}
+            </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            { !isEmpty(this.state.artists)
-              ? <List component="nav">
-                  { this.state.artists.map((artist, index) =>
-                    <ListItem key={index} onClick={() => this.setArtist(artist)} button>
-                      <ListItemText primary={artist.name} />
-                    </ListItem>
-                  )}
-                </List>
-              : <LoadingIndicator />
-            }
+          <ExpansionPanelDetails className={classes.panelList}>
+            {this.createMediaList('artists', this.state.artists)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
-          expanded={expanded === 'panel2'}
-          onChange={this.handleChange('panel2')}
+          expanded={selectedPanel == 'albumPanel'}
+          onChange={() => this.handlePanelSelection('albumPanel')}
           disabled={isEmpty(this.state.selectedArtist)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Album</Typography>
-            <Typography className={classes.secondaryHeading}>{this.state.selectedAlbum.name}</Typography>
+            <Typography className={classes.heading}>
+              Album
+            </Typography>
+            <Typography className={classes.secondaryHeading}>
+              {this.state.selectedAlbum.name}
+            </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            { !isEmpty(this.state.albums)
-              ? <List component="nav">
-                  { this.state.albums.map((album, index) =>
-                    <ListItem key={index} onClick={() => this.setAlbum(album)} button>
-                      <ListItemText primary={album.name} />
-                    </ListItem>
-                  )}
-                </List>
-              : <LoadingIndicator />
-            }
+          <ExpansionPanelDetails className={classes.panelList}>
+            {this.createMediaList('albums', this.state.albums)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
-          expanded={expanded === 'panel3'}
-          onChange={this.handleChange('panel3')}
-          disabled={isEmpty(this.state.selectedAlbum)}
+          expanded={selectedPanel == 'songPanel'}
+          onChange={() => this.handlePanelSelection('songPanel')}
+          disabled={isEmpty(this.state.selectedArtist) || isEmpty(this.state.selectedAlbum)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Song</Typography>
-            <Typography className={classes.secondaryHeading}>{this.state.selectedSong.name}</Typography>
+            <Typography className={classes.heading}>
+              Song
+            </Typography>
+            <Typography className={classes.secondaryHeading}>
+              {this.state.selectedSong.name}
+            </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            { !isEmpty(this.state.songs)
-              ? <List component="nav">
-                  { this.state.songs.map((song, index) =>
-                    <ListItem key={index} onClick={() => this.setSong(song)} button>
-                      <ListItemText primary={song.name} />
-                    </ListItem>
-                  )}
-                </List>
-              : <LoadingIndicator />
-            }
+          <ExpansionPanelDetails className={classes.panelList}>
+            {this.createMediaList('songs', this.state.songs)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
@@ -146,9 +174,5 @@ const LoadingIndicator = () =>
   <Grid container justify="center">
     <CircularProgress />
   </Grid>
-
-Library.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(Library);
