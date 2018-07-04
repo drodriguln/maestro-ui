@@ -36,6 +36,11 @@ export default class Main extends React.Component {
   }
 
   render() {
+    //Hack to get background color to adjust with theme change.
+    document.body.style.backgroundColor =
+      this.state.theme.palette.type == 'dark'
+        ? '#303030'
+        : '#fafafa';
     return (
       <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
         <NavigationBar
