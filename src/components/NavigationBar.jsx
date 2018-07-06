@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEmpty } from '../common/functions';
 import NavigationDrawer from './NavigationDrawer';
 import SettingsDrawer from './SettingsDrawer';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
+import MiniPlayer from './MiniPlayer';
 
 const styles = theme => ({
   flex: {
@@ -55,7 +57,7 @@ class NavigationBar extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position="static">
+        <AppBar>
           <Toolbar>
             <IconButton
               className={this.props.classes.menuButton}
@@ -71,6 +73,10 @@ class NavigationBar extends React.Component {
             >
               Maestro
             </Typography>
+            { !isEmpty(this.props.songInfo)
+              ? <MiniPlayer songInfo={this.props.songInfo} />
+              : <span />
+            }
             <IconButton
               className={this.props.classes.settingsButton}
               color="inherit"

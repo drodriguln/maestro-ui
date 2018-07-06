@@ -1,6 +1,6 @@
 import React from 'react';
 import NavigationBar from './NavigationBar';
-import Spotlight from './Spotlight';
+import Pinboard from './Pinboard';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { pink } from '@material-ui/core/colors';
 
@@ -9,7 +9,8 @@ export default class Main extends React.Component {
   constructor() {
     super();
     this.state = {
-      spotlight: 'library',
+      songInfo: {},
+      pin: 'library',
       theme: {
         palette: {
           type: 'light',
@@ -19,8 +20,18 @@ export default class Main extends React.Component {
     }
   }
 
-  setSpotlight = (spotlight) => {
-    this.setState({ spotlight });
+  setSongInfo = (artist, album, song) => {
+    this.setState({
+      songInfo: {
+        artist: artist,
+        album: album,
+        song: song
+      }
+    });
+  }
+
+  setPin = (pin) => {
+    this.setState({ pin });
   }
 
   setPaletteType = (type) => {
@@ -40,16 +51,20 @@ export default class Main extends React.Component {
     document.body.style.backgroundColor =
       this.state.theme.palette.type == 'dark'
         ? '#303030'
-        : '#fafafa';
+        : '#FAFAFA';
     return (
       <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
         <NavigationBar
-          onNavigationSelect={this.setSpotlight}
+          songInfo={this.state.songInfo}
+          onNavigationSelect={this.setPin}
           onPaletteTypeSelect={this.setPaletteType}
           onPaletteColorSelect={this.setPaletteColor}
         />
-        <br />
-        <Spotlight currentView={this.state.spotlight} />
+        <br /><br /><br /><br />
+        <Pinboard
+          pin={this.state.pin}
+          onLibrarySelect={this.setSongInfo}
+        />
       </MuiThemeProvider>
     );
   }
