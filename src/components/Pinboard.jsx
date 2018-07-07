@@ -2,9 +2,9 @@ import React from 'react';
 import Library from './Library';
 
 const Pinboard = (props) =>
-    props.pin == 'library'
+    props.pin === 'library'
       ? <Library
-          onSelect={(artist, album, song) => props.onLibrarySelect(artist, album, song)}
+          onSelect={(playlist, songInfo) => props.onLibrarySelect(playlist, songInfo)}
         />
       : <span />
 

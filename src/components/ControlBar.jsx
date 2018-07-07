@@ -1,14 +1,12 @@
 import React from 'react';
 import { isEmpty } from '../common/functions';
 import NavigationDrawer from './NavigationDrawer';
-import SettingsDrawer from './SettingsDrawer';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import SettingsIcon from '@material-ui/icons/Settings';
 import MiniPlayer from './MiniPlayer';
 
 const styles = theme => ({
@@ -24,34 +22,23 @@ const styles = theme => ({
   }
 });
 
-class NavigationBar extends React.Component {
+class ControlBar extends React.Component {
 
   constructor() {
     super();
     this.state = {
-      isNavigationDrawerOpen: false,
-      isSettingsDrawerOpen: false
+      isNavigationDrawerOpen: false
     };
   }
 
   openNavigationDrawer = () => this.setState({ isNavigationDrawerOpen: true });
   closeNavigationDrawer = () => this.setState({ isNavigationDrawerOpen: false });
-  openSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: true });
-  closeSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: false });
+  setPaletteType = (type) => this.props.onPaletteTypeSelect(type);
+  setPaletteColor = (color) => this.props.onPaletteColorSelect(color);
 
   setNavigationSelection = (selection) => {
     this.closeNavigationDrawer();
     this.props.onNavigationSelect(selection);
-  }
-
-  setPaletteType = (type) => {
-    this.closeSettingsDrawer();
-    this.props.onPaletteTypeSelect(type);
-  }
-
-  setPaletteColor = (color) => {
-    this.closeSettingsDrawer();
-    this.props.onPaletteColorSelect(color);
   }
 
   render() {
@@ -74,32 +61,26 @@ class NavigationBar extends React.Component {
               Maestro
             </Typography>
             { !isEmpty(this.props.songInfo)
-              ? <MiniPlayer songInfo={this.props.songInfo} />
+              ? <MiniPlayer
+                  playlist={this.props.playlist}
+                  songInfo={this.props.songInfo}
+                  onSongChange={this.props.onSongChange}
+                />
               : <span />
             }
-            <IconButton
-              className={this.props.classes.settingsButton}
-              color="inherit"
-              onClick={this.openSettingsDrawer}
-            >
-              <SettingsIcon />
-            </IconButton>
           </Toolbar>
         </AppBar>
         <NavigationDrawer
           isOpen={this.state.isNavigationDrawerOpen}
+          themePalette={this.props.themePalette}
           onSelect={this.setNavigationSelection}
-          onClose={this.closeNavigationDrawer}
-        />
-        <SettingsDrawer
-          isOpen={this.state.isSettingsDrawerOpen}
-          onClose={this.closeSettingsDrawer}
           onPaletteTypeSelect={this.setPaletteType}
           onPaletteColorSelect={this.setPaletteColor}
+          onClose={this.closeNavigationDrawer}
         />
       </div>
     )
   }
 }
 
-export default withStyles(styles)(NavigationBar);
+export default withStyles(styles)(ControlBar);

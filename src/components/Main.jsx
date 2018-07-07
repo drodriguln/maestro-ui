@@ -1,5 +1,5 @@
 import React from 'react';
-import NavigationBar from './NavigationBar';
+import ControlBar from './ControlBar';
 import Pinboard from './Pinboard';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { pink } from '@material-ui/core/colors';
@@ -9,25 +9,24 @@ export default class Main extends React.Component {
   constructor() {
     super();
     this.state = {
+      playlist: [],
       songInfo: {},
-      pin: 'library',
+      pin: '',
       theme: {
         palette: {
-          type: 'light',
+          type: 'dark',
           primary: pink
         }
       }
     }
   }
 
-  setSongInfo = (artist, album, song) => {
-    this.setState({
-      songInfo: {
-        artist: artist,
-        album: album,
-        song: song
-      }
-    });
+  setPlayerData = (playlist, songInfo) => {
+    this.setState({ playlist, songInfo });
+  }
+
+  setSongInfo = (songInfo) => {
+    this.setState({ songInfo });
   }
 
   setPin = (pin) => {
@@ -49,13 +48,16 @@ export default class Main extends React.Component {
   render() {
     //Hack to get background color to adjust with theme change.
     document.body.style.backgroundColor =
-      this.state.theme.palette.type == 'dark'
+      this.state.theme.palette.type === 'dark'
         ? '#303030'
         : '#FAFAFA';
     return (
       <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
-        <NavigationBar
+        <ControlBar
+          playlist={this.state.playlist}
           songInfo={this.state.songInfo}
+          themePalette={this.state.theme.palette}
+          onSongChange={this.setSongInfo}
           onNavigationSelect={this.setPin}
           onPaletteTypeSelect={this.setPaletteType}
           onPaletteColorSelect={this.setPaletteColor}
@@ -63,7 +65,7 @@ export default class Main extends React.Component {
         <br /><br /><br /><br />
         <Pinboard
           pin={this.state.pin}
-          onLibrarySelect={this.setSongInfo}
+          onLibrarySelect={this.setPlayerData}
         />
       </MuiThemeProvider>
     );

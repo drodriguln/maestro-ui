@@ -78,12 +78,18 @@ class Library extends React.Component {
       selectedSong: song,
       selectedPanel: false
     });
-    this.props.onSelect(this.state.selectedArtist, this.state.selectedAlbum, song);
+    let playlist = this.state.songs;
+    let songInfo = {
+      artist: this.state.selectedArtist,
+      album: this.state.selectedAlbum,
+      song: song
+    };
+    this.props.onSelect( playlist, songInfo );
   }
 
   handlePanelSelection = (panel) => {
     this.setState({
-      selectedPanel: this.state.selectedPanel != panel
+      selectedPanel: this.state.selectedPanel !== panel
         ? panel
         : false
     });
@@ -97,9 +103,9 @@ class Library extends React.Component {
               key={index}
               button
               onClick={
-                type == 'artists'
+                type === 'artists'
                   ? () => this.setArtist(item)
-                  : type == 'albums'
+                  : type === 'albums'
                     ? () => this.setAlbum(item)
                     : () => this.setSong(item)
               }
@@ -112,11 +118,11 @@ class Library extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { selectedPanel } = this.state;
+    const { selectedPanel, selectedArtist, selectedAlbum, selectedSong } = this.state;
     return (
       <div className={classes.root}>
         <ExpansionPanel
-          expanded={selectedPanel == 'artistPanel'}
+          expanded={selectedPanel === 'artistPanel'}
           onChange={() => this.handlePanelSelection('artistPanel')}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -124,7 +130,7 @@ class Library extends React.Component {
               Artist
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {this.state.selectedArtist.name}
+              {selectedArtist.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
@@ -132,16 +138,16 @@ class Library extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
-          expanded={selectedPanel == 'albumPanel'}
+          expanded={selectedPanel === 'albumPanel'}
           onChange={() => this.handlePanelSelection('albumPanel')}
-          disabled={isEmpty(this.state.selectedArtist)}
+          disabled={isEmpty(selectedArtist)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Album
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {this.state.selectedAlbum.name}
+              {selectedAlbum.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
@@ -149,16 +155,16 @@ class Library extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
-          expanded={selectedPanel == 'songPanel'}
+          expanded={selectedPanel === 'songPanel'}
           onChange={() => this.handlePanelSelection('songPanel')}
-          disabled={isEmpty(this.state.selectedArtist) || isEmpty(this.state.selectedAlbum)}
+          disabled={isEmpty(selectedArtist) || isEmpty(selectedAlbum)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Song
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {this.state.selectedSong.name}
+              {selectedSong.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
