@@ -82,10 +82,6 @@ class MiniPlayer extends React.Component {
           src={songFileUrl}
           ref={(node) => this.audioNode = node}
         />
-        <CardMedia
-          className={this.props.classes.cover}
-          image={songArtworkUrl}
-        />
         <IconButton>
           <SkipPreviousIcon onClick={this.previous} />
         </IconButton>
@@ -98,6 +94,10 @@ class MiniPlayer extends React.Component {
         <IconButton onClick={this.next}>
           <SkipNextIcon />
         </IconButton>
+        <CardMedia
+          className={this.props.classes.cover}
+          image={songArtworkUrl}
+        />
       </div>
     );
   }
