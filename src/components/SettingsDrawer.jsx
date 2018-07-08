@@ -2,10 +2,13 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
+import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import { withStyles } from "@material-ui/core/styles/index";
 import {
     amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
@@ -14,11 +17,9 @@ import {
   } from '@material-ui/core/colors';
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  }
+  list: {
+    width: 300
+  },
 });
 
 const paletteColors = [
@@ -58,7 +59,7 @@ class SettingsDrawer extends React.Component {
   }
 
   createThemeTypeList = () =>
-    <List subheader={<ListSubheader>Theme Type</ListSubheader>}>
+    <List className={this.props.classes.list} subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}>
       <ListItem>
         <ListItemText primary="Dark" />
         <ListItemSecondaryAction>
@@ -71,7 +72,7 @@ class SettingsDrawer extends React.Component {
     </List>
 
   createThemeColorList = () =>
-      <List subheader={<ListSubheader>Theme Colors</ListSubheader>}>
+      <List className={this.props.classes.list} subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}>
         { paletteColors.map((color, index) =>
           <ListItem
             button
@@ -85,12 +86,19 @@ class SettingsDrawer extends React.Component {
 
   render() {
     return (
-      <div className={this.props.classes.root}>
       <Drawer open={this.props.isOpen} onClose={this.props.onClose}>
-          {this.createThemeTypeList()}
-          {this.createThemeColorList()}
+        <List className={this.props.classes.list}>
+          <ListItem onClick={this.props.onClose} button>
+            <ListItemIcon>
+              <BackIcon />
+            </ListItemIcon>
+            <ListItemText primary="Back"/>
+          </ListItem>
+        </List>
+        <Divider />
+        {this.createThemeTypeList()}
+        {this.createThemeColorList()}
       </Drawer>
-      </div>
     )
   }
 }
