@@ -11,11 +11,11 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import { withStyles } from "@material-ui/core/styles/index";
 
-const styles = {
+const styles = theme => ({
   list: {
     width: 250
   }
-};
+});
 
 class NavigationDrawer extends React.Component {
 
