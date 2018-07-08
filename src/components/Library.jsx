@@ -71,7 +71,7 @@ class Library extends React.Component {
     });
     findAllSongs(this.state.selectedArtist.id, album.id)
       .then(songs => this.setState({ songs }));
-  }
+  };
 
   setSong = (song) => {
     this.setState({
@@ -84,8 +84,8 @@ class Library extends React.Component {
       album: this.state.selectedAlbum,
       song: song
     };
-    this.props.onSelect( playlist, songInfo );
-  }
+    this.props.onSelect(playlist, songInfo);
+  };
 
   handlePanelSelection = (panel) => {
     this.setState({
@@ -179,6 +179,6 @@ class Library extends React.Component {
 const LoadingIndicator = () =>
   <Grid container justify="center">
     <CircularProgress />
-  </Grid>
+  </Grid>;
 
 export default withStyles(styles)(Library);
