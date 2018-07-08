@@ -5,8 +5,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
 import LibraryIcon from '@material-ui/icons/CloudCircle';
+import EditIcon from '@material-ui/icons/Create';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -41,47 +43,53 @@ class NavigationDrawer extends React.Component {
   }
 
   render() {
-    const { isOpen, onClose, onSelect, classes } = this.props;
+    const { isOpen, onClose, onSelect, classes, themePalette } = this.props;
     return (
       <div>
         <Drawer open={isOpen} onClose={onClose}>
-          <List className={this.props.classes.list}>
-            <ListItem onClick={this.props.onClose} button>
-              <ListItemIcon>
-                <BackIcon />
-              </ListItemIcon>
+          <List className={classes.list}>
+            <ListItem onClick={onClose} button>
+              <ListItemIcon><BackIcon/></ListItemIcon>
               <ListItemText primary="Close"/>
             </ListItem>
           </List>
           <Divider />
           <List component="nav" className={classes.list}>
             <ListItem onClick={() => onSelect('library')} button>
-              <ListItemIcon>
-                <LibraryIcon />
-              </ListItemIcon>
+              <ListItemIcon><LibraryIcon/></ListItemIcon>
               <ListItemText primary="Music Library"/>
             </ListItem>
-            <ListItem onClick={() => onSelect('upload')} button>
-              <ListItemIcon>
-                <UploadIcon />
-              </ListItemIcon>
-              <ListItemText primary="File Upload"/>
-            </ListItem>
+            <Tooltip title="Coming Soon" placement="left">
+              <span>
+                <ListItem button disabled>
+                  <ListItemIcon>
+                    <EditIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Edit Library"/>
+                </ListItem>
+              </span>
+            </Tooltip>
+            <Tooltip title="Coming Soon" placement="left">
+              <span>
+                <ListItem button disabled>
+                  <ListItemIcon>
+                    <UploadIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="File Upload"/>
+                </ListItem>
+              </span>
+            </Tooltip>
             <ListItem onClick={this.openSettingsDrawer} button>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
+              <ListItemIcon><SettingsIcon/></ListItemIcon>
               <ListItemText primary="Settings"/>
-              <ListItemIcon>
-                <SubMenuIcon />
-              </ListItemIcon>
+              <ListItemIcon><SubMenuIcon/></ListItemIcon>
             </ListItem>
           </List>
         </Drawer>
         <SettingsDrawer
           className={classes.list}
           isOpen={this.state.isSettingsDrawerOpen}
-          themePalette={this.props.themePalette}
+          themePalette={themePalette}
           onClose={this.closeSettingsDrawer}
           onPaletteTypeSelect={this.handlePaletteTypeSelect}
           onPaletteColorSelect={this.handlePaletteColorSelect}
