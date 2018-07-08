@@ -4,7 +4,7 @@
   "description": "An React-based music player and library manager.",
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "webpack-dev-server --mode development --host 0.0.0.0",
     "build": "webpack --mode production"
   },
   "author": "Daniel A. Rodriguez",
@@ -22,8 +22,9 @@
   "dependencies": {
     "@material-ui/core": "^1.3.0",
     "@material-ui/icons": "^1.1.0",
+    "@material-ui/lab": "^1.0.0-alpha.5",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-audio-player": "~0.10.0"
+    "react-audio-player": "~0.10.0",
+    "react-dom": "^16.4.1"
   }
 }

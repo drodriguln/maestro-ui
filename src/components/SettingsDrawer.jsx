@@ -59,7 +59,11 @@ class SettingsDrawer extends React.Component {
   }
 
   createThemeTypeList = () =>
-    <List className={this.props.classes.list} subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}>
+    <List
+      className={this.props.classes.list}
+      subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
+      dense
+    >
       <ListItem>
         <ListItemText primary="Dark" />
         <ListItemSecondaryAction>
@@ -69,20 +73,27 @@ class SettingsDrawer extends React.Component {
           />
         </ListItemSecondaryAction>
       </ListItem>
-    </List>
+    </List>;
 
   createThemeColorList = () =>
-      <List className={this.props.classes.list} subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}>
+      <List
+        className={this.props.classes.list}
+        subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
+        dense
+      >
         { paletteColors.map((color, index) =>
           <ListItem
             button
             key={index}
             onClick={() => this.props.onPaletteColorSelect(color.value)}
           >
-            <ListItemText primary={color.name} />
+            <ListItemText
+              primary={color.name}
+              secondary={color.value === this.props.themePalette.primary ? "Selected" : null}
+            />
           </ListItem>
         )}
-      </List>
+      </List>;
 
   render() {
     return (

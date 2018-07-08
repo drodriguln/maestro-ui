@@ -32,15 +32,8 @@ class NavigationDrawer extends React.Component {
 
   openSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: true });
   closeSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: false });
-
-  handlePaletteTypeSelect = (type) => {
-    this.props.onPaletteTypeSelect(type);
-  }
-
-  handlePaletteColorSelect = (color) => {
-    this.props.onPaletteColorSelect(color);
-    this.closeSettingsDrawer();
-  }
+  handlePaletteTypeSelect = (type) => this.props.onPaletteTypeSelect(type);
+  handlePaletteColorSelect = (color) => this.props.onPaletteColorSelect(color);
 
   render() {
     const { isOpen, onClose, onSelect, classes, themePalette } = this.props;
@@ -54,7 +47,7 @@ class NavigationDrawer extends React.Component {
             </ListItem>
           </List>
           <Divider />
-          <List component="nav" className={classes.list}>
+          <List component="nav" className={classes.list} dense>
             <ListItem onClick={() => onSelect('library')} button>
               <ListItemIcon><LibraryIcon/></ListItemIcon>
               <ListItemText primary="Music Library"/>

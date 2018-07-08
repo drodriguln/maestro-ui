@@ -1,29 +1,22 @@
 import React from 'react';
+import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
+import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseCircleIcon from '@material-ui/icons/PauseCircleOutline';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import AudioPlayer from 'react-audio-player';
 
 const styles = theme => ({
-  cover: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  artwork: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     display: 'inline-block',
     verticalAlign: 'bottom'
-  },
-  progressCircle: {
-    color: theme.palette.text.secondary,
-    verticalAlign: 'bottom'
-  },
-  disc: {
-    marginLeft: 2,
-    marginRight: 2
   }
 });
 
@@ -33,7 +26,8 @@ class MiniPlayer extends React.Component {
     super(props);
     this.state = {
       isPlaying: true,
-      currentPosition: 0
+      currentPosition: 0,
+      popupPlayerAnchorEl: null
     }
   }
 
@@ -82,9 +76,17 @@ class MiniPlayer extends React.Component {
     let songLength = this.audioNode !== undefined ? this.audioNode.audioEl.duration : 1;
     this.setState({ currentPosition: position / songLength * 100 });
   };
+  handleOpenPopupPlayer = event => {
+    this.setState({ popupPlayerAnchorEl: event.currentTarget });
+  };
+
+  handleClosePopupPlayer = () => {
+    this.setState({ popupPlayerAnchorEl: null });
+  };
 
   render() {
-    const { classes } = this.props;
+    const { songInfo, classes } = this.props;
+    const { isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
     const songFileUrl = 'https://drodriguln-maestro-api.herokuapp.com/artists/'
       + this.props.songInfo.artist.id + '/albums/' + this.props.songInfo.album.id
       + '/songs/' + this.props.songInfo.song.id + '/file';
@@ -100,36 +102,58 @@ class MiniPlayer extends React.Component {
           listenInterval={100}
           onListen={this.setCurrentPosition}
         />
-        <span className={classes.disc}>
-          <CircularProgress
-            className={classes.progressCircle}
-            variant="static" size={45} value={this.state.currentPosition}
-          />
-        </span>
-        <span className={classes.disc}>
+        <span className={classes.controller}>
           <IconButton>
             <SkipPreviousIcon onClick={this.previous} />
           </IconButton>
         </span>
-        <span className={classes.disc}>
-          <IconButton onClick={this.state.isPlaying ? this.pause : this.play}>
-            { this.state.isPlaying
+        <span className={classes.controller}>
+          <IconButton onClick={isPlaying ? this.pause : this.play}>
+            { isPlaying
               ? <PauseCircleIcon />
               : <PlayArrowIcon />
             }
           </IconButton>
         </span>
-        <span className={classes.disc}>
+        <span className={classes.controller}>
           <IconButton onClick={this.next}>
             <SkipNextIcon />
           </IconButton>
         </span>
-        <span className={classes.disc}>
-          <CardMedia
-            className={this.props.classes.cover}
-            image={songArtworkUrl}
-          />
+        <span className={classes.controller}>
+          <IconButton onClick={this.handleOpenPopupPlayer}>
+            <CardMedia
+              className={classes.artwork}
+              image={songArtworkUrl}
+            />
+          </IconButton>
         </span>
+        <Popover
+          open={popupPlayerAnchorEl != null}
+          anchorEl={popupPlayerAnchorEl}
+          onClose={this.handleClosePopupPlayer}
+          anchorPosition={{ top: 500 }}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <PopupPlayer
+            songInfo={songInfo}
+            songFileUrl={songFileUrl}
+            songArtworkUrl={songArtworkUrl}
+            isPlaying={isPlaying}
+            currentPosition={currentPosition}
+            onPlay={this.play}
+            onPause={this.pause}
+            onPrevious={this.previous}
+            onNext={this.next}
+          />
+        </Popover>
       </div>
     );
   }
