@@ -4,6 +4,11 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles/index";
 
+/*
+ * To be replaced with React Router implementation when
+ * file upload and edit library options are added.
+ */
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2
