@@ -45,6 +45,7 @@ class PopupPlayer extends React.Component {
   pause = () => this.props.onPause();
   previous = () => this.props.onPrevious();
   next = () => this.props.onNext();
+  changeSliderPosition = (event, value) => this.props.onChangePosition(value);
 
   render() {
     const { classes, songInfo, songArtworkUrl, isPlaying, currentPosition } = this.props;
@@ -95,7 +96,10 @@ class PopupPlayer extends React.Component {
             </Tooltip>
           </div>
           <div className={classes.progressBar}>
-            <Slider value={currentPosition} />
+            <Slider
+              value={currentPosition}
+              onChange={this.changeSliderPosition}
+            />
           </div>
         </div>
       </div>

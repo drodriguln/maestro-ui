@@ -1,4 +1,5 @@
 import React from 'react';
+import { findSongFile, findArtworkFile } from '../common/rest';
 import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -27,14 +28,42 @@ class MiniPlayer extends React.Component {
     this.state = {
       isPlaying: true,
       currentPosition: 0,
-      popupPlayerAnchorEl: null
+      popupPlayerAnchorEl: null,
+      songFileUrl: null,
+      songArtworkUrl: null
+    };
+    this.load(this.props.songInfo.artist.id, this.props.songInfo.album.id, this.props.songInfo.song.id);
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    if (this.props.songInfo.artist.id !== nextProps.songInfo.artist.id
+      || this.props.songInfo.album.id !== nextProps.songInfo.album.id
+      || this.props.songInfo.song.id !== nextProps.songInfo.song.id)
+    {
+      this.load(nextProps.songInfo.artist.id, nextProps.songInfo.album.id, nextProps.songInfo.song.id);
     }
   }
+
+  load = (artistId, albumId, songId) => {
+    if (this.audioNode !== undefined) {
+      this.stop();
+      this.setState({ currentPosition: 0 });
+    }
+    findSongFile(artistId, albumId, songId)
+      .then((blob) => this.setState({ songFileUrl: URL.createObjectURL(blob) }));
+    findArtworkFile(artistId, albumId, songId)
+      .then((blob) => this.setState({ songArtworkUrl: URL.createObjectURL(blob) }));
+  };
 
   play = () =>  {
     this.audioNode.audioEl.play();
     this.setState({ isPlaying: true });
   };
+
+  stop = () => {
+    this.audioNode.audioEl.pause();
+    this.audioNode.audioEl.currentTime = 0;
+  }
 
   pause = () => {
     this.audioNode.audioEl.pause();
@@ -72,10 +101,15 @@ class MiniPlayer extends React.Component {
   };
 
   setAudioNode = (node) => this.audioNode = node;
-  setCurrentPosition = (position) => {
+  setCurrentTrackedPosition = (position) => {
     let songLength = this.audioNode !== undefined ? this.audioNode.audioEl.duration : 1;
     this.setState({ currentPosition: position / songLength * 100 });
   };
+  changeCurrentPosition = (position) => {
+    this.audioNode.audioEl.currentTime = (position * this.audioNode.audioEl.duration) / 100;
+    this.setState({ currentPosition: position });
+  }
+
   handleOpenPopupPlayer = event => {
     this.setState({ popupPlayerAnchorEl: event.currentTarget });
   };
@@ -86,13 +120,7 @@ class MiniPlayer extends React.Component {
 
   render() {
     const { songInfo, classes } = this.props;
-    const { isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
-    const songFileUrl = 'https://drodriguln-maestro-api.herokuapp.com/artists/'
-      + this.props.songInfo.artist.id + '/albums/' + this.props.songInfo.album.id
-      + '/songs/' + this.props.songInfo.song.id + '/file';
-    const songArtworkUrl = 'https://drodriguln-maestro-api.herokuapp.com/artists/'
-      + this.props.songInfo.artist.id + '/albums/' + this.props.songInfo.album.id
-      + '/songs/' + this.props.songInfo.song.id + '/artwork';
+    const { songFileUrl, songArtworkUrl, isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
     return (
       <div>
         <AudioPlayer
@@ -100,7 +128,7 @@ class MiniPlayer extends React.Component {
           src={songFileUrl}
           ref={this.setAudioNode}
           listenInterval={100}
-          onListen={this.setCurrentPosition}
+          onListen={this.setCurrentTrackedPosition}
         />
         <span className={classes.controller}>
           <IconButton>
@@ -133,21 +161,15 @@ class MiniPlayer extends React.Component {
           anchorEl={popupPlayerAnchorEl}
           onClose={this.handleClosePopupPlayer}
           anchorPosition={{ top: 500 }}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <PopupPlayer
             songInfo={songInfo}
-            songFileUrl={songFileUrl}
             songArtworkUrl={songArtworkUrl}
             isPlaying={isPlaying}
             currentPosition={currentPosition}
+            onChangePosition={this.changeCurrentPosition}
             onPlay={this.play}
             onPause={this.pause}
             onPrevious={this.previous}
