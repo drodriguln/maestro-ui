@@ -15,5 +15,5 @@ export const findSongFile = (artistId, albumId, songId) =>
     .then(response => response.blob());
 
 export const findArtworkFile = (artistId, albumId, songId) =>
-fetch('https://drodriguln-maestro-api.herokuapp.com/artists/' + artistId + '/albums/' + albumId + '/songs/' + songId + '/artwork')
-  .then(response => response.blob());
+  fetch('https://drodriguln-maestro-api.herokuapp.com/artists/' + artistId + '/albums/' + albumId + '/songs/' + songId + '/artwork')
+    .then(response => response.blob());
