@@ -27,8 +27,9 @@ const Pinboard = (props) =>
           <br/>
         <Typography>
           The main menu can be accessed in the top left. Currently, editing and uploading songs is unsupported,
-          but there are four free-domain songs from esteemed composers to choose from. Please allow up to about 
-          10 seconds for the backend API to load with your first library selection.
+          but there are four free-domain songs from esteemed composers to choose from. 
+          <br/>
+          Please allow up to about 10 seconds for the backend API to load with your first library selection.
         </Typography>
           <br/>
         <Typography>
