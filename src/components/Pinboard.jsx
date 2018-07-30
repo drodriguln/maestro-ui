@@ -22,7 +22,8 @@ const Pinboard = (props) =>
       />
     : <Paper className={props.classes.paper} elevation={1}>
         <Typography variant="headline">
-          Select a song to get started.
+          Select a song to get started. 
+          Please allow up to about 10 seconds for the backend API to load with your first library selection.
         </Typography>
           <br/>
         <Typography>
