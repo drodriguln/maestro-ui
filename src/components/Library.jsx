@@ -1,4 +1,7 @@
 import React from 'react';
+import store from '../store';
+import { SET_PLAYER } from '../store/player/actions';
+import { connect } from 'react-redux';
 import { findAllArtists, findAllAlbums, findAllSongs } from '../common/rest';
 import { isEmpty } from '../common/functions';
 import { withStyles } from '@material-ui/core/styles';
@@ -78,13 +81,15 @@ class Library extends React.Component {
       selectedSong: song,
       selectedPanel: false
     });
-    let playlist = this.state.songs;
-    let songInfo = {
-      artist: this.state.selectedArtist,
-      album: this.state.selectedAlbum,
-      song: song
-    };
-    this.props.onSelect(playlist, songInfo);
+    store.dispatch({
+      type: SET_PLAYER,
+      payload: {
+        artist: this.state.selectedArtist,
+        album: this.state.selectedAlbum,
+        song: song,
+        playlist: this.state.songs
+      }
+    });
   };
 
   handlePanelSelection = (panel) => {
@@ -176,9 +181,10 @@ class Library extends React.Component {
   }
 }
 
-const LoadingIndicator = () =>
+const LoadingIndicator = () => (
   <Grid container justify="center">
     <CircularProgress />
-  </Grid>;
+  </Grid>
+);
 
 export default withStyles(styles)(Library);

@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import store from '../store';
+import { SET_PLAYER } from '../store/player/actions';
 import { findSongFile, findArtworkFile } from '../common/rest';
 import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,15 +35,15 @@ class MiniPlayer extends React.Component {
       songFileUrl: null,
       songArtworkUrl: null
     };
-    this.load(this.props.songInfo.artist.id, this.props.songInfo.album.id, this.props.songInfo.song.id);
+    this.load(this.props.artist.id, this.props.album.id, this.props.song.id);
   }
 
   componentWillUpdate(nextProps, nextState, nextContext) {
-    if (this.props.songInfo.artist.id !== nextProps.songInfo.artist.id
-      || this.props.songInfo.album.id !== nextProps.songInfo.album.id
-      || this.props.songInfo.song.id !== nextProps.songInfo.song.id)
+    if (this.props.artist.id !== nextProps.artist.id
+      || this.props.album.id !== nextProps.album.id
+      || this.props.song.id !== nextProps.song.id)
     {
-      this.load(nextProps.songInfo.artist.id, nextProps.songInfo.album.id, nextProps.songInfo.song.id);
+      this.load(nextProps.artist.id, nextProps.album.id, nextProps.song.id);
     }
   }
 
@@ -71,30 +74,36 @@ class MiniPlayer extends React.Component {
   };
 
   previous = () => {
-    const { playlist, songInfo } = this.props;
+    const { artist, album, song, playlist } = this.props;
     for (let i = 0; i < playlist.length; i++) {
-      if (playlist[i].id === songInfo.song.id && i > 0) {
-        let newSongInfo = {
-          artist: songInfo.artist,
-          album: songInfo.album,
-          song: playlist[i - 1]
-        };
-        this.props.onSongChange(newSongInfo);
+      if (playlist[i].id === song.id && i > 0) {
+        store.dispatch({
+          type: SET_PLAYER,
+          payload: {
+            artist: artist,
+            album: album,
+            song: playlist[i - 1],
+            playlist: playlist
+          }
+        });
         break;
       }
     }
   };
 
   next = () => {
-    const { playlist, songInfo } = this.props;
+    const { artist, album, song, playlist } = this.props;
     for (let i = 0; i < playlist.length; i++) {
-      if (playlist[i].id === songInfo.song.id && i < playlist.length - 1) {
-        let newSongInfo = {
-          artist: songInfo.artist,
-          album: songInfo.album,
-          song: playlist[i + 1]
-        };
-        this.props.onSongChange(newSongInfo);
+      if (playlist[i].id === song.id && i < playlist.length - 1) {
+        store.dispatch({
+          type: SET_PLAYER,
+          payload: {
+            artist: artist,
+            album: album,
+            song: playlist[i + 1],
+            playlist: playlist
+          }
+        });
         break;
       }
     }
@@ -119,7 +128,7 @@ class MiniPlayer extends React.Component {
   };
 
   render() {
-    const { songInfo, classes } = this.props;
+    const { classes } = this.props;
     const { songFileUrl, songArtworkUrl, isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
     return (
       <div>
@@ -165,7 +174,6 @@ class MiniPlayer extends React.Component {
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <PopupPlayer
-            songInfo={songInfo}
             songArtworkUrl={songArtworkUrl}
             isPlaying={isPlaying}
             currentPosition={currentPosition}
@@ -181,4 +189,13 @@ class MiniPlayer extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(MiniPlayer);
+const mapStateToProps = state => {
+  return {
+    artist: state.player.artist,
+    album: state.player.album,
+    song: state.player.song,
+    playlist: state.player.playlist
+  };
+}
+const MiniPlayerWithStyles = withStyles(styles, { withTheme: true })(MiniPlayer);
+export default connect(mapStateToProps)(MiniPlayerWithStyles);

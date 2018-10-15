@@ -9,10 +9,6 @@ export default class Main extends React.Component {
   constructor() {
     super();
     this.state = {
-      playlist: [
-      ],
-      songInfo: {
-      },
       pin: '',
       theme: {
         palette: {
@@ -22,14 +18,6 @@ export default class Main extends React.Component {
       }
     }
   }
-
-  setPlayerData = (playlist, songInfo) => {
-    this.setState({ playlist, songInfo });
-  };
-
-  setSongInfo = (songInfo) => {
-    this.setState({ songInfo });
-  };
 
   setPin = (pin) => {
     this.setState({ pin });
@@ -56,10 +44,7 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider theme={createMuiTheme(this.state.theme)}>
         <ControlBar
-          playlist={this.state.playlist}
-          songInfo={this.state.songInfo}
           themePalette={this.state.theme.palette}
-          onSongChange={this.setSongInfo}
           onNavigationSelect={this.setPin}
           onPaletteTypeSelect={this.setPaletteType}
           onPaletteColorSelect={this.setPaletteColor}

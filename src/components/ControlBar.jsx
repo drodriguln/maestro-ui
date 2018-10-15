@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { isEmpty } from '../common/functions';
 import NavigationDrawer from './NavigationDrawer';
 import { withStyles } from '@material-ui/core/styles';
@@ -42,6 +43,7 @@ class ControlBar extends React.Component {
   }
 
   render() {
+  const { player } = this.props;
     return (
       <div>
         <AppBar>
@@ -60,12 +62,8 @@ class ControlBar extends React.Component {
             >
               Maestro
             </Typography>
-            { !isEmpty(this.props.songInfo)
-              ? <MiniPlayer
-                  playlist={this.props.playlist}
-                  songInfo={this.props.songInfo}
-                  onSongChange={this.props.onSongChange}
-                />
+            { !isEmpty(player.song)
+              ? <MiniPlayer />
               : <span />
             }
           </Toolbar>
@@ -83,4 +81,11 @@ class ControlBar extends React.Component {
   }
 }
 
-export default withStyles(styles)(ControlBar);
+const mapStateToProps = state => {
+  return {
+    player: state.player
+  }
+}
+
+const ControlBarWithStyles = withStyles(styles)(ControlBar);
+export default connect(mapStateToProps)(ControlBarWithStyles);

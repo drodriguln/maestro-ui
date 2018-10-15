@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
@@ -48,7 +49,10 @@ class PopupPlayer extends React.Component {
   changeSliderPosition = (event, value) => this.props.onChangePosition(value);
 
   render() {
-    const { classes, songInfo, songArtworkUrl, isPlaying, currentPosition } = this.props;
+    const {
+      classes, artist, album, song,
+      songArtworkUrl, isPlaying, currentPosition
+    } = this.props;
     return (
       <div>
         <CardMedia
@@ -58,13 +62,13 @@ class PopupPlayer extends React.Component {
         <div>
           <div className={classes.text}>
             <Typography variant="headline">
-              {songInfo.song.name}
+              {song.name}
             </Typography>
             <Typography variant="caption">
-              {songInfo.album.name}
+              {album.name}
             </Typography>
             <Typography variant="caption">
-              {songInfo.artist.name}
+              {artist.name}
             </Typography>
           </div>
           <div className={classes.buttons}>
@@ -107,4 +111,12 @@ class PopupPlayer extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(PopupPlayer);
+const mapStateToProps = state => {
+  return {
+    artist: state.player.artist,
+    album: state.player.album,
+    song: state.player.song
+  };
+}
+const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);
+export default connect(mapStateToProps)(PopupPlayerWithStyles);

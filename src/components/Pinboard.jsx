@@ -17,9 +17,7 @@ const styles = theme => ({
 
 const Pinboard = (props) =>
   props.pin === 'library'
-    ? <Library
-        onSelect={(playlist, songInfo) => props.onLibrarySelect(playlist, songInfo)}
-      />
+    ? <Library />
     : <Paper className={props.classes.paper} elevation={1}>
         <Typography variant="headline">
           Select a song to get started.
