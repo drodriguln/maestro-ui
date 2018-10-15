@@ -1,6 +1,7 @@
 import React from 'react';
 import store from '../store';
 import { SET_PLAYER } from '../store/player/actions';
+import { FETCH_ARTISTS, SET_ARTIST, FETCH_ALBUMS, SET_ALBUM, FETCH_SONGS, SET_SONG } from '../store/library/actions';
 import { connect } from 'react-redux';
 import { findAllArtists, findAllAlbums, findAllSongs } from '../common/rest';
 import { isEmpty } from '../common/functions';
@@ -40,54 +41,36 @@ class Library extends React.Component {
   constructor() {
     super();
     this.state = {
-      artists: [],
-      albums: [],
-      songs: [],
-      selectedArtist: {},
-      selectedAlbum: {},
-      selectedSong: {},
       selectedPanel: null
     };
     findAllArtists()
-      .then(artists => this.setState({ artists }));
+      .then(artists => store.dispatch({ type: FETCH_ARTISTS, payload: artists }));
   }
 
   setArtist = (artist) => {
-    this.setState({
-      selectedArtist: artist,
-      selectedAlbum: {},
-      albums: [],
-      selectedSong: {},
-      songs: [],
-      selectedPanel: false
-    });
+    this.setState({ selectedPanel: false });
+    store.dispatch({ type: SET_ARTIST, payload: artist });
     findAllAlbums(artist.id)
-      .then(albums => this.setState({ albums }));
+      .then(albums => store.dispatch({ type: FETCH_ALBUMS, payload: albums }));
   };
 
   setAlbum = (album) => {
-    this.setState({
-      selectedAlbum: album,
-      selectedSong: {},
-      songs: [],
-      selectedPanel: false
-    });
-    findAllSongs(this.state.selectedArtist.id, album.id)
-      .then(songs => this.setState({ songs }));
+    this.setState({ selectedPanel: false });
+    store.dispatch({ type: SET_ALBUM, payload: album });
+    findAllSongs(this.props.artist.id, album.id)
+      .then(songs => store.dispatch({ type: FETCH_SONGS, payload: songs }));
   };
 
   setSong = (song) => {
-    this.setState({
-      selectedSong: song,
-      selectedPanel: false
-    });
+    this.setState({ selectedPanel: false });
+    store.dispatch({ type: SET_SONG, payload: song });
     store.dispatch({
       type: SET_PLAYER,
       payload: {
-        artist: this.state.selectedArtist,
-        album: this.state.selectedAlbum,
+        artist: this.props.artist,
+        album: this.props.album,
         song: song,
-        playlist: this.state.songs
+        playlist: this.props.songs
       }
     });
   };
@@ -122,8 +105,8 @@ class Library extends React.Component {
       : <LoadingIndicator />
 
   render() {
-    const { classes } = this.props;
-    const { selectedPanel, selectedArtist, selectedAlbum, selectedSong } = this.state;
+    const { artists, artist, albums, album, songs, song, classes } = this.props;
+    const { selectedPanel } = this.state;
     return (
       <div className={classes.root}>
         <ExpansionPanel
@@ -135,45 +118,45 @@ class Library extends React.Component {
               Artist
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {selectedArtist.name}
+              {artist.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
-            {this.createMediaList('artists', this.state.artists)}
+            {this.createMediaList('artists', artists)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
           expanded={selectedPanel === 'albumPanel'}
           onChange={() => this.handlePanelSelection('albumPanel')}
-          disabled={isEmpty(selectedArtist)}
+          disabled={isEmpty(artist)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Album
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {selectedAlbum.name}
+              {album.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
-            {this.createMediaList('albums', this.state.albums)}
+            {this.createMediaList('albums', this.props.albums)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
           expanded={selectedPanel === 'songPanel'}
           onChange={() => this.handlePanelSelection('songPanel')}
-          disabled={isEmpty(selectedArtist) || isEmpty(selectedAlbum)}
+          disabled={isEmpty(artist) || isEmpty(album)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Song
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              {selectedSong.name}
+              {song.name}
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
-            {this.createMediaList('songs', this.state.songs)}
+            {this.createMediaList('songs', songs)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
@@ -187,4 +170,15 @@ const LoadingIndicator = () => (
   </Grid>
 );
 
-export default withStyles(styles)(Library);
+const mapStateToProps = state => {
+  return {
+    artists: state.library.artists,
+    artist: state.library.artist,
+    albums: state.library.albums,
+    album: state.library.album,
+    songs: state.library.songs,
+    song: state.library.song
+  };
+}
+const LibraryWithStyles = withStyles(styles)(Library);
+export default connect(mapStateToProps)(LibraryWithStyles);
