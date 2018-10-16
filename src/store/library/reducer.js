@@ -1,4 +1,4 @@
-import { FETCH_ARTISTS, SET_ARTIST, FETCH_ALBUMS, SET_ALBUM, FETCH_SONGS, SET_SONG } from './actions';
+import { SET_ARTISTS, SET_ARTIST, SET_ALBUMS, SET_ALBUM, SET_SONGS, SET_SONG } from './actions';
 
 const initialState = {
   artists: [],
@@ -11,15 +11,15 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
-    case FETCH_ARTISTS:
+    case SET_ARTISTS:
       return Object.assign({}, state, { artists: action.payload });
     case SET_ARTIST:
       return Object.assign({}, state, { artist: action.payload });
-    case FETCH_ALBUMS:
+    case SET_ALBUMS:
       return Object.assign({}, state, { albums: action.payload });
     case SET_ALBUM:
       return Object.assign({}, state, { album: action.payload });
-    case FETCH_SONGS:
+    case SET_SONGS:
       return Object.assign({}, state, { songs: action.payload });
     case SET_SONG:
       return Object.assign({}, state, { song: action.payload });

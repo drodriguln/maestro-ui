@@ -1,9 +1,8 @@
 import React from 'react';
 import store from '../store';
 import { SET_PLAYER } from '../store/player/actions';
-import { FETCH_ARTISTS, SET_ARTIST, FETCH_ALBUMS, SET_ALBUM, FETCH_SONGS, SET_SONG } from '../store/library/actions';
+import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../store/library/actions';
 import { connect } from 'react-redux';
-import { findAllArtists, findAllAlbums, findAllSongs } from '../common/rest';
 import { isEmpty } from '../common/functions';
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -43,27 +42,27 @@ class Library extends React.Component {
     this.state = {
       selectedPanel: null
     };
-    findAllArtists()
-      .then(artists => store.dispatch({ type: FETCH_ARTISTS, payload: artists }));
+  }
+
+  componentDidMount() {
+    this.props.fetchArtists();
   }
 
   setArtist = (artist) => {
     this.setState({ selectedPanel: false });
-    store.dispatch({ type: SET_ARTIST, payload: artist });
-    findAllAlbums(artist.id)
-      .then(albums => store.dispatch({ type: FETCH_ALBUMS, payload: albums }));
+    this.props.setArtist(artist);
+    this.props.fetchAlbums(artist.id);
   };
 
   setAlbum = (album) => {
     this.setState({ selectedPanel: false });
-    store.dispatch({ type: SET_ALBUM, payload: album });
-    findAllSongs(this.props.artist.id, album.id)
-      .then(songs => store.dispatch({ type: FETCH_SONGS, payload: songs }));
+    this.props.setAlbum(album);
+    this.props.fetchSongs(this.props.artist.id, album.id);
   };
 
   setSong = (song) => {
     this.setState({ selectedPanel: false });
-    store.dispatch({ type: SET_SONG, payload: song });
+    this.props.setSong(song);
     store.dispatch({
       type: SET_PLAYER,
       payload: {
@@ -180,5 +179,15 @@ const mapStateToProps = state => {
     song: state.library.song
   };
 }
+
+const mapDispatchToProps = {
+  fetchArtists: fetchArtists,
+  fetchAlbums: fetchAlbums,
+  fetchSongs: fetchSongs,
+  setArtist: setArtist,
+  setAlbum: setAlbum,
+  setSong: setSong
+};
+
 const LibraryWithStyles = withStyles(styles)(Library);
-export default connect(mapStateToProps)(LibraryWithStyles);
+export default connect(mapStateToProps, mapDispatchToProps)(LibraryWithStyles);
