@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import store from '../store';
-import { SET_PLAYER } from '../store/player/actions';
-import { findSongFile, findArtworkFile } from '../common/rest';
+import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../store/player/actions';
 import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -31,9 +29,7 @@ class MiniPlayer extends React.Component {
     this.state = {
       isPlaying: true,
       currentPosition: 0,
-      popupPlayerAnchorEl: null,
-      songFileUrl: null,
-      songArtworkUrl: null
+      popupPlayerAnchorEl: null
     };
     this.load(this.props.artist.id, this.props.album.id, this.props.song.id);
   }
@@ -52,10 +48,8 @@ class MiniPlayer extends React.Component {
       this.stop();
       this.setState({ currentPosition: 0 });
     }
-    findSongFile(artistId, albumId, songId)
-      .then((blob) => this.setState({ songFileUrl: URL.createObjectURL(blob) }));
-    findArtworkFile(artistId, albumId, songId)
-      .then((blob) => this.setState({ songArtworkUrl: URL.createObjectURL(blob) }));
+    this.props.fetchSongFileUrl(artistId, albumId, songId);
+    this.props.fetchArtworkFileUrl(artistId, albumId, songId);
   };
 
   play = () =>  {
@@ -77,15 +71,7 @@ class MiniPlayer extends React.Component {
     const { artist, album, song, playlist } = this.props;
     for (let i = 0; i < playlist.length; i++) {
       if (playlist[i].id === song.id && i > 0) {
-        store.dispatch({
-          type: SET_PLAYER,
-          payload: {
-            artist: artist,
-            album: album,
-            song: playlist[i - 1],
-            playlist: playlist
-          }
-        });
+        this.props.setPlayerData(artist, album, playlist[i - 1], playlist);
         break;
       }
     }
@@ -95,15 +81,7 @@ class MiniPlayer extends React.Component {
     const { artist, album, song, playlist } = this.props;
     for (let i = 0; i < playlist.length; i++) {
       if (playlist[i].id === song.id && i < playlist.length - 1) {
-        store.dispatch({
-          type: SET_PLAYER,
-          payload: {
-            artist: artist,
-            album: album,
-            song: playlist[i + 1],
-            playlist: playlist
-          }
-        });
+        this.props.setPlayerData(artist, album, playlist[i + 1], playlist);
         break;
       }
     }
@@ -128,8 +106,8 @@ class MiniPlayer extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { songFileUrl, songArtworkUrl, isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
+    const { songFileUrl, artworkFileUrl, classes } = this.props;
+    const { isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
     return (
       <div>
         <AudioPlayer
@@ -161,7 +139,7 @@ class MiniPlayer extends React.Component {
           <IconButton onClick={this.handleOpenPopupPlayer}>
             <CardMedia
               className={classes.artwork}
-              image={songArtworkUrl}
+              image={artworkFileUrl}
             />
           </IconButton>
         </span>
@@ -174,7 +152,7 @@ class MiniPlayer extends React.Component {
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <PopupPlayer
-            songArtworkUrl={songArtworkUrl}
+            songArtworkUrl={artworkFileUrl}
             isPlaying={isPlaying}
             currentPosition={currentPosition}
             onChangePosition={this.changeCurrentPosition}
@@ -194,8 +172,17 @@ const mapStateToProps = state => {
     artist: state.player.artist,
     album: state.player.album,
     song: state.player.song,
-    playlist: state.player.playlist
+    playlist: state.player.playlist,
+    songFileUrl: state.player.songFileUrl,
+    artworkFileUrl: state.player.artworkFileUrl
   };
 }
+
+const mapDispatchToProps = {
+  setPlayerData: setPlayerData,
+  fetchSongFileUrl: fetchSongFileUrl,
+  fetchArtworkFileUrl: fetchArtworkFileUrl
+};
+
 const MiniPlayerWithStyles = withStyles(styles, { withTheme: true })(MiniPlayer);
-export default connect(mapStateToProps)(MiniPlayerWithStyles);
+export default connect(mapStateToProps, mapDispatchToProps)(MiniPlayerWithStyles);

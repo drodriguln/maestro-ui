@@ -1,6 +1,6 @@
 import React from 'react';
 import store from '../store';
-import { SET_PLAYER } from '../store/player/actions';
+import { setPlayerData } from '../store/player/actions';
 import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../store/library/actions';
 import { connect } from 'react-redux';
 import { isEmpty } from '../common/functions';
@@ -61,17 +61,10 @@ class Library extends React.Component {
   };
 
   setSong = (song) => {
+    const { artist, album, songs } = this.props;
     this.setState({ selectedPanel: false });
     this.props.setSong(song);
-    store.dispatch({
-      type: SET_PLAYER,
-      payload: {
-        artist: this.props.artist,
-        album: this.props.album,
-        song: song,
-        playlist: this.props.songs
-      }
-    });
+    this.props.setPlayerData(artist, album, song, songs);
   };
 
   handlePanelSelection = (panel) => {
@@ -97,7 +90,7 @@ class Library extends React.Component {
                     : () => this.setSong(item)
               }
             >
-              <ListItemText primary={item.name} />
+              <ListItemText secondary={item.name} />
             </ListItem>
           )}
         </List>
@@ -186,7 +179,8 @@ const mapDispatchToProps = {
   fetchSongs: fetchSongs,
   setArtist: setArtist,
   setAlbum: setAlbum,
-  setSong: setSong
+  setSong: setSong,
+  setPlayerData: setPlayerData
 };
 
 const LibraryWithStyles = withStyles(styles)(Library);
