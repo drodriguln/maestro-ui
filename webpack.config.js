@@ -4,12 +4,16 @@ module.exports = {
   module: {
     rules: [
       {
-        test: [/\.(js|jsx)/],
+        test: [/\.(js|jsx|ts|tsx)/],
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "awesome-typescript-loader"
         }
-      }
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        loader: "source-map-loader" }
     ]
   },
   plugins: [
@@ -19,6 +23,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
+  devtool: "source-map"
 };

@@ -19,7 +19,7 @@ const Pinboard = (props) =>
   props.pin === 'library'
     ? <Library />
     : <Paper className={props.classes.paper} elevation={1}>
-        <Typography variant="headline">
+        <Typography variant="h5">
           Select a song to get started.
         </Typography>
           <br/>

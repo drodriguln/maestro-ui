@@ -57,7 +57,7 @@ class ControlBar extends React.Component {
             </IconButton>
             <Typography
               className={this.props.classes.flex}
-              variant="title"
+              variant="h6"
               color="inherit"
             >
               Maestro

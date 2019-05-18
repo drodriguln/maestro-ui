@@ -61,7 +61,7 @@ class PopupPlayer extends React.Component {
         />
         <div>
           <div className={classes.text}>
-            <Typography variant="headline">
+            <Typography variant="h5">
               {song.name}
             </Typography>
             <Typography variant="caption">
