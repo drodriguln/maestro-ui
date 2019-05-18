@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { isEmpty } from '../common/functions';
 import NavigationDrawer from './NavigationDrawer';
@@ -23,10 +23,10 @@ const styles = theme => ({
   }
 });
 
-class ControlBar extends React.Component {
+class ControlBar extends React.Component<any, any> {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isNavigationDrawerOpen: false
     };
@@ -85,7 +85,7 @@ const mapStateToProps = state => {
   return {
     player: state.player
   }
-}
+};
 
 const ControlBarWithStyles = withStyles(styles)(ControlBar);
 export default connect(mapStateToProps)(ControlBarWithStyles);

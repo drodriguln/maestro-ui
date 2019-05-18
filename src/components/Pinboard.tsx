@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Library from './Library';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +15,7 @@ const styles = theme => ({
   },
 });
 
-const Pinboard = (props) =>
+const Pinboard = (props) => (
   props.pin === 'library'
     ? <Library />
     : <Paper className={props.classes.paper} elevation={1}>
@@ -31,6 +31,7 @@ const Pinboard = (props) =>
         <Typography>
           After selecting a song, be sure to click the artwork button to expand the full music player. Oh, and feel free to toy around with the theme colors in settings. Enjoy!
         </Typography>
-      </Paper>;
+      </Paper>
+);
 
 export default withStyles(styles)(Pinboard);

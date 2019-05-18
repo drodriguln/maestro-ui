@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../store/player/actions';
 import PopupPlayer from './PopupPlayer';
@@ -22,7 +22,13 @@ const styles = theme => ({
   }
 });
 
-class MiniPlayer extends React.Component {
+interface MiniPlayer {
+  audioNode: {
+    audioEl: HTMLAudioElement
+  }
+}
+
+class MiniPlayer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -60,7 +66,7 @@ class MiniPlayer extends React.Component {
   stop = () => {
     this.audioNode.audioEl.pause();
     this.audioNode.audioEl.currentTime = 0;
-  }
+  };
 
   pause = () => {
     this.audioNode.audioEl.pause();
@@ -95,7 +101,7 @@ class MiniPlayer extends React.Component {
   changeCurrentPosition = (position) => {
     this.audioNode.audioEl.currentTime = (position * this.audioNode.audioEl.duration) / 100;
     this.setState({ currentPosition: position });
-  }
+  };
 
   handleOpenPopupPlayer = event => {
     this.setState({ popupPlayerAnchorEl: event.currentTarget });
@@ -147,7 +153,7 @@ class MiniPlayer extends React.Component {
           open={popupPlayerAnchorEl != null}
           anchorEl={popupPlayerAnchorEl}
           onClose={this.handleClosePopupPlayer}
-          anchorPosition={{ top: 500 }}
+          anchorPosition={{ top: 500, left: 500 }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
@@ -176,7 +182,7 @@ const mapStateToProps = state => {
     songFileUrl: state.player.songFileUrl,
     artworkFileUrl: state.player.artworkFileUrl
   };
-}
+};
 
 const mapDispatchToProps = {
   setPlayerData: setPlayerData,

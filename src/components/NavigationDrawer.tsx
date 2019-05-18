@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import SettingsDrawer from './SettingsDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-class NavigationDrawer extends React.Component {
+class NavigationDrawer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);

@@ -4,16 +4,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: [/\.(js|jsx|ts|tsx)/],
+        test: [/\.tsx?/],
         exclude: /node_modules/,
         use: {
           loader: "awesome-typescript-loader"
         }
-      },
-      {
-        test: /\.js$/,
-        enforce: "pre",
-        loader: "source-map-loader" }
+      }
     ]
   },
   plugins: [
@@ -23,7 +19,6 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  },
-  devtool: "source-map"
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  }
 };

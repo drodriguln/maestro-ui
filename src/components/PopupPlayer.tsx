@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -25,7 +25,7 @@ const styles = theme => ({
     paddingBottom: 5
   },
   buttons: {
-    textAlign: 'center',
+    textAlign: 'center' as 'center',
     paddingLeft: 10,
     paddingRight: 10
   },
@@ -36,7 +36,7 @@ const styles = theme => ({
   }
 });
 
-class PopupPlayer extends React.Component {
+class PopupPlayer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -117,6 +117,6 @@ const mapStateToProps = state => {
     album: state.player.album,
     song: state.player.song
   };
-}
+};
 const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);
 export default connect(mapStateToProps)(PopupPlayerWithStyles);

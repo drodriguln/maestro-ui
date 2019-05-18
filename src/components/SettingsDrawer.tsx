@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -44,7 +44,7 @@ const paletteColors = [
   {name: "Yellow", value: yellow}
 ];
 
-class SettingsDrawer extends React.Component {
+class SettingsDrawer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);

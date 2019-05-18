@@ -1,5 +1,4 @@
-import React from 'react';
-import store from '../store';
+import * as React from 'react';
 import { setPlayerData } from '../store/player/actions';
 import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../store/library/actions';
 import { connect } from 'react-redux';
@@ -21,12 +20,12 @@ const styles = theme => ({
     width: '100%'
   },
   panelList: {
-    overflowY: 'auto',
-    maxHeight: '150px'
+    overflowY: 'auto' as 'auto',
+    maxHeight: '150px' as '150px'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
+    flexBasis: '33.33%' as '33.33%',
     flexShrink: 0,
   },
   secondaryHeading: {
@@ -35,10 +34,10 @@ const styles = theme => ({
   },
 });
 
-class Library extends React.Component {
+class Library extends React.Component<any, any> {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       selectedPanel: null
     };
@@ -75,7 +74,7 @@ class Library extends React.Component {
     });
   };
 
-  createMediaList = (type, list) =>
+  createMediaList = (type, list) => (
     !isEmpty(list)
       ? <List component="nav">
           { list.map((item, index) =>
@@ -95,6 +94,7 @@ class Library extends React.Component {
           )}
         </List>
       : <LoadingIndicator />
+  );
 
   render() {
     const { artists, artist, albums, album, songs, song, classes } = this.props;
@@ -131,7 +131,7 @@ class Library extends React.Component {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.panelList}>
-            {this.createMediaList('albums', this.props.albums)}
+            {this.createMediaList('albums', albums)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
@@ -171,7 +171,7 @@ const mapStateToProps = state => {
     songs: state.library.songs,
     song: state.library.song
   };
-}
+};
 
 const mapDispatchToProps = {
   fetchArtists: fetchArtists,
@@ -183,5 +183,5 @@ const mapDispatchToProps = {
   setPlayerData: setPlayerData
 };
 
-const LibraryWithStyles = withStyles(styles)(Library);
+const LibraryWithStyles = withStyles(styles, { withTheme: true })(Library);
 export default connect(mapStateToProps, mapDispatchToProps)(LibraryWithStyles);
