@@ -13,7 +13,7 @@ import Slider from '@material-ui/lab/Slider';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const styles = theme => ({
+const styles = () => ({
   cover: {
     width: 350,
     height: 350,
@@ -111,12 +111,11 @@ class PopupPlayer extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    artist: state.player.artist,
-    album: state.player.album,
-    song: state.player.song
-  };
-};
+const mapStateToProps = state => ({
+  artist: state.player.artist,
+  album: state.player.album,
+  song: state.player.song
+});
+
 const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);
 export default connect(mapStateToProps)(PopupPlayerWithStyles);

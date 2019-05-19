@@ -15,7 +15,7 @@ import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import { withStyles } from "@material-ui/core/styles/index";
 
-const styles = theme => ({
+const styles = () => ({
   list: {
     width: 300
   },
@@ -88,7 +88,7 @@ class NavigationDrawer extends React.Component<any, any> {
           onPaletteColorSelect={this.handlePaletteColorSelect}
         />
       </div>
-    )
+    );
   }
 }
 

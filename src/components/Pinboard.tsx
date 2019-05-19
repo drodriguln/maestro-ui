@@ -25,7 +25,7 @@ const Pinboard = (props) => (
           <br/>
         <Typography>
           The main menu can be accessed in the top left. Currently, editing and uploading songs is unsupported,
-          but there are four free-domain songs from esteemed composers to choose from. Please be patient as MongoDB Atlas wakes up from its slumber to first load music data.
+          but there are some free-domain songs available to try out.
         </Typography>
           <br/>
         <Typography>

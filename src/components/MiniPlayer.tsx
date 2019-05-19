@@ -12,7 +12,7 @@ import PauseCircleIcon from '@material-ui/icons/PauseCircleOutline';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AudioPlayer from 'react-audio-player';
 
-const styles = theme => ({
+const styles = () => ({
   artwork: {
     width: 48,
     height: 48,
@@ -173,16 +173,14 @@ class MiniPlayer extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    artist: state.player.artist,
-    album: state.player.album,
-    song: state.player.song,
-    playlist: state.player.playlist,
-    songFileUrl: state.player.songFileUrl,
-    artworkFileUrl: state.player.artworkFileUrl
-  };
-};
+const mapStateToProps = state => ({
+  artist: state.player.artist,
+  album: state.player.album,
+  song: state.player.song,
+  playlist: state.player.playlist,
+  songFileUrl: state.player.songFileUrl,
+  artworkFileUrl: state.player.artworkFileUrl
+});
 
 const mapDispatchToProps = {
   setPlayerData: setPlayerData,

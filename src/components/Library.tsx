@@ -162,16 +162,14 @@ const LoadingIndicator = () => (
   </Grid>
 );
 
-const mapStateToProps = state => {
-  return {
-    artists: state.library.artists,
-    artist: state.library.artist,
-    albums: state.library.albums,
-    album: state.library.album,
-    songs: state.library.songs,
-    song: state.library.song
-  };
-};
+const mapStateToProps = state => ({
+  artists: state.library.artists,
+  artist: state.library.artist,
+  albums: state.library.albums,
+  album: state.library.album,
+  songs: state.library.songs,
+  song: state.library.song
+});
 
 const mapDispatchToProps = {
   fetchArtists: fetchArtists,

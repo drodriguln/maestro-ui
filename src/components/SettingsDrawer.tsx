@@ -16,7 +16,7 @@ import {
     purple, red, teal, yellow
   } from '@material-ui/core/colors';
 
-const styles = theme => ({
+const styles = () => ({
   list: {
     width: 300
   },
@@ -56,9 +56,9 @@ class SettingsDrawer extends React.Component<any, any> {
         ? 'light'
         : 'dark'
     );
-  }
+  };
 
-  createThemeTypeList = () =>
+  createThemeTypeList = () => (
     <List
       className={this.props.classes.list}
       subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
@@ -73,9 +73,10 @@ class SettingsDrawer extends React.Component<any, any> {
           />
         </ListItemSecondaryAction>
       </ListItem>
-    </List>;
+    </List>
+  );
 
-  createThemeColorList = () =>
+  createThemeColorList = () => (
       <List
         className={this.props.classes.list}
         subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
@@ -93,7 +94,8 @@ class SettingsDrawer extends React.Component<any, any> {
             />
           </ListItem>
         )}
-      </List>;
+      </List>
+  );
 
   render() {
     return (
@@ -110,7 +112,7 @@ class SettingsDrawer extends React.Component<any, any> {
         {this.createThemeTypeList()}
         {this.createThemeColorList()}
       </Drawer>
-    )
+    );
   }
 }
 

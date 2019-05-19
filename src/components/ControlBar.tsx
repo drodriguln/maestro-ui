@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MiniPlayer from './MiniPlayer';
 
-const styles = theme => ({
+const styles = () => ({
   flex: {
     flex: 1
   },
@@ -40,7 +40,7 @@ class ControlBar extends React.Component<any, any> {
   setNavigationSelection = (selection) => {
     this.closeNavigationDrawer();
     this.props.onNavigationSelect(selection);
-  }
+  };
 
   render() {
   const { player } = this.props;
@@ -77,15 +77,13 @@ class ControlBar extends React.Component<any, any> {
           onClose={this.closeNavigationDrawer}
         />
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    player: state.player
-  }
-};
+const mapStateToProps = state => ({
+  player: state.player
+});
 
 const ControlBarWithStyles = withStyles(styles)(ControlBar);
 export default connect(mapStateToProps)(ControlBarWithStyles);
