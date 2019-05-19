@@ -43,20 +43,21 @@ class ControlBar extends React.Component<any, any> {
   };
 
   render() {
-  const { player } = this.props;
+    const { isNavigationDrawerOpen } = this.state;
+    const { player, classes, themePalette } = this.props;
     return (
       <div>
         <AppBar>
           <Toolbar>
             <IconButton
-              className={this.props.classes.menuButton}
+              className={classes.menuButton}
               color="inherit"
               onClick={this.openNavigationDrawer}
             >
               <MenuIcon />
             </IconButton>
             <Typography
-              className={this.props.classes.flex}
+              className={classes.flex}
               variant="h6"
               color="inherit"
             >
@@ -69,8 +70,8 @@ class ControlBar extends React.Component<any, any> {
           </Toolbar>
         </AppBar>
         <NavigationDrawer
-          isOpen={this.state.isNavigationDrawerOpen}
-          themePalette={this.props.themePalette}
+          isOpen={isNavigationDrawerOpen}
+          themePalette={themePalette}
           onSelect={this.setNavigationSelection}
           onPaletteTypeSelect={this.setPaletteType}
           onPaletteColorSelect={this.setPaletteColor}

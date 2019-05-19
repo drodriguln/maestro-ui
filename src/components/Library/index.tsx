@@ -77,7 +77,7 @@ class Library extends React.Component<any, any> {
   createMediaList = (type, list) => (
     !isEmpty(list)
       ? <List component="nav">
-          { list.map((item, index) =>
+          { list.map((item, index) => (
             <ListItem
               key={index}
               button
@@ -91,7 +91,7 @@ class Library extends React.Component<any, any> {
             >
               <ListItemText secondary={item.name} />
             </ListItem>
-          )}
+          ))}
         </List>
       : <LoadingIndicator />
   );
