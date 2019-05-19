@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../store/player/actions';
-import PopupPlayer from './PopupPlayer';
+import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../../store/player/actions';
+import PopupPlayer from '../PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 import Popover from '@material-ui/core/Popover';
@@ -153,7 +153,7 @@ class MiniPlayer extends React.Component<any, any> {
           open={popupPlayerAnchorEl != null}
           anchorEl={popupPlayerAnchorEl}
           onClose={this.handleClosePopupPlayer}
-          anchorPosition={{ top: 500, left: 500 }}
+          anchorPosition={{ top: 500, left: 0 }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
@@ -173,13 +173,13 @@ class MiniPlayer extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  artist: state.player.artist,
-  album: state.player.album,
-  song: state.player.song,
-  playlist: state.player.playlist,
-  songFileUrl: state.player.songFileUrl,
-  artworkFileUrl: state.player.artworkFileUrl
+const mapStateToProps = ({ player }) => ({
+  artist: player.artist,
+  album: player.album,
+  song: player.song,
+  playlist: player.playlist,
+  songFileUrl: player.songFileUrl,
+  artworkFileUrl: player.artworkFileUrl
 });
 
 const mapDispatchToProps = {

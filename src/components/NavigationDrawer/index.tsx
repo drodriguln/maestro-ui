@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SettingsDrawer from './SettingsDrawer';
+import SettingsDrawer from '../SettingsDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,7 +13,7 @@ import UploadIcon from '@material-ui/icons/CloudUpload';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles/index";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = () => ({
   list: {

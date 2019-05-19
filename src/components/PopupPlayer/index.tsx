@@ -111,10 +111,10 @@ class PopupPlayer extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  artist: state.player.artist,
-  album: state.player.album,
-  song: state.player.song
+const mapStateToProps = ({ player }) => ({
+  artist: player.artist,
+  album: player.album,
+  song: player.song
 });
 
 const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from '../common/functions';
-import NavigationDrawer from './NavigationDrawer';
+import { isEmpty } from '../../common/functions';
+import NavigationDrawer from '../NavigationDrawer';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MiniPlayer from './MiniPlayer';
+import MiniPlayer from '../MiniPlayer';
 
 const styles = () => ({
   flex: {
@@ -81,8 +81,8 @@ class ControlBar extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  player: state.player
+const mapStateToProps = ({ player }) => ({
+  player: player
 });
 
 const ControlBarWithStyles = withStyles(styles)(ControlBar);

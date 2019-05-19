@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { setPlayerData } from '../store/player/actions';
-import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../store/library/actions';
+import { setPlayerData } from '../../store/player/actions';
+import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../../store/library/actions';
 import { connect } from 'react-redux';
-import { isEmpty } from '../common/functions';
+import { isEmpty } from '../../common/functions';
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -162,13 +162,13 @@ const LoadingIndicator = () => (
   </Grid>
 );
 
-const mapStateToProps = state => ({
-  artists: state.library.artists,
-  artist: state.library.artist,
-  albums: state.library.albums,
-  album: state.library.album,
-  songs: state.library.songs,
-  song: state.library.song
+const mapStateToProps = ({ library }) => ({
+  artists: library.artists,
+  artist: library.artist,
+  albums: library.albums,
+  album: library.album,
+  songs: library.songs,
+  song: library.song
 });
 
 const mapDispatchToProps = {

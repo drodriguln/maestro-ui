@@ -9,7 +9,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles/index";
+import { withStyles } from "@material-ui/core/styles";
 import {
     amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
     green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,

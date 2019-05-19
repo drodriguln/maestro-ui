@@ -4,4 +4,4 @@ export const isEmpty = (myObject) => {
       if (myObject.hasOwnProperty(key))
           return false;
   return true;
-}
+};
