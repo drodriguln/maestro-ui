@@ -1,19 +1,19 @@
-import React from 'react';
+import * as React from "react";
 import ControlBar from './ControlBar';
 import Pinboard from './Pinboard';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { pink } from '@material-ui/core/colors';
+import { blueGrey } from '@material-ui/core/colors';
 
-export default class Main extends React.Component {
+export default class Main extends React.Component<any, any> {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       pin: '',
       theme: {
         palette: {
           type: 'dark',
-          primary: pink
+          primary: blueGrey
         }
       }
     }
@@ -50,10 +50,7 @@ export default class Main extends React.Component {
           onPaletteColorSelect={this.setPaletteColor}
         />
         <br /><br /><br /><br />
-        <Pinboard
-          pin={this.state.pin}
-          onLibrarySelect={this.setPlayerData}
-        />
+        <Pinboard pin={this.state.pin} />
       </MuiThemeProvider>
     );
   }

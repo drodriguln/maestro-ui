@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../store/player/actions';
+import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../../../store/player/actions';
 import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -12,17 +12,26 @@ import PauseCircleIcon from '@material-ui/icons/PauseCircleOutline';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AudioPlayer from 'react-audio-player';
 
-const styles = theme => ({
+const styles = () => ({
   artwork: {
     width: 48,
     height: 48,
     borderRadius: 24,
     display: 'inline-block',
     verticalAlign: 'bottom'
+  },
+  popupPlayerButton: {
+    padding: 0
   }
 });
 
-class MiniPlayer extends React.Component {
+interface MiniPlayer {
+  audioNode: {
+    audioEl: HTMLAudioElement
+  }
+}
+
+class MiniPlayer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -60,7 +69,7 @@ class MiniPlayer extends React.Component {
   stop = () => {
     this.audioNode.audioEl.pause();
     this.audioNode.audioEl.currentTime = 0;
-  }
+  };
 
   pause = () => {
     this.audioNode.audioEl.pause();
@@ -95,7 +104,7 @@ class MiniPlayer extends React.Component {
   changeCurrentPosition = (position) => {
     this.audioNode.audioEl.currentTime = (position * this.audioNode.audioEl.duration) / 100;
     this.setState({ currentPosition: position });
-  }
+  };
 
   handleOpenPopupPlayer = event => {
     this.setState({ popupPlayerAnchorEl: event.currentTarget });
@@ -136,10 +145,10 @@ class MiniPlayer extends React.Component {
           </IconButton>
         </span>
         <span className={classes.controller}>
-          <IconButton onClick={this.handleOpenPopupPlayer}>
-            <CardMedia
+          <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
+            <img
               className={classes.artwork}
-              image={artworkFileUrl}
+              src={artworkFileUrl}
             />
           </IconButton>
         </span>
@@ -147,7 +156,7 @@ class MiniPlayer extends React.Component {
           open={popupPlayerAnchorEl != null}
           anchorEl={popupPlayerAnchorEl}
           onClose={this.handleClosePopupPlayer}
-          anchorPosition={{ top: 500 }}
+          anchorPosition={{ top: 500, left: 0 }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
@@ -167,16 +176,14 @@ class MiniPlayer extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    artist: state.player.artist,
-    album: state.player.album,
-    song: state.player.song,
-    playlist: state.player.playlist,
-    songFileUrl: state.player.songFileUrl,
-    artworkFileUrl: state.player.artworkFileUrl
-  };
-}
+const mapStateToProps = ({ player }) => ({
+  artist: player.artist,
+  album: player.album,
+  song: player.song,
+  playlist: player.playlist,
+  songFileUrl: player.songFileUrl,
+  artworkFileUrl: player.artworkFileUrl
+});
 
 const mapDispatchToProps = {
   setPlayerData: setPlayerData,

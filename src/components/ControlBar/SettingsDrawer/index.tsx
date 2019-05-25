@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,14 +9,14 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles/index";
+import { withStyles } from "@material-ui/core/styles";
 import {
     amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
     green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
     purple, red, teal, yellow
   } from '@material-ui/core/colors';
 
-const styles = theme => ({
+const styles = () => ({
   list: {
     width: 300
   },
@@ -44,7 +44,7 @@ const paletteColors = [
   {name: "Yellow", value: yellow}
 ];
 
-class SettingsDrawer extends React.Component {
+class SettingsDrawer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -56,9 +56,9 @@ class SettingsDrawer extends React.Component {
         ? 'light'
         : 'dark'
     );
-  }
+  };
 
-  createThemeTypeList = () =>
+  createThemeTypeList = () => (
     <List
       className={this.props.classes.list}
       subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
@@ -68,14 +68,15 @@ class SettingsDrawer extends React.Component {
         <ListItemText primary="Dark" />
         <ListItemSecondaryAction>
           <Switch
+            color="primary" checked={this.props.themePalette.type === 'dark'}
             onChange={this.handleThemeTypeToggle}
-            checked={this.props.themePalette.type === 'dark'}
           />
         </ListItemSecondaryAction>
       </ListItem>
-    </List>;
+    </List>
+  );
 
-  createThemeColorList = () =>
+  createThemeColorList = () => (
       <List
         className={this.props.classes.list}
         subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
@@ -93,7 +94,8 @@ class SettingsDrawer extends React.Component {
             />
           </ListItem>
         )}
-      </List>;
+      </List>
+  );
 
   render() {
     return (
@@ -110,7 +112,7 @@ class SettingsDrawer extends React.Component {
         {this.createThemeTypeList()}
         {this.createThemeColorList()}
       </Drawer>
-    )
+    );
   }
 }
 

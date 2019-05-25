@@ -1,5 +1,5 @@
-import React from 'react';
-import SettingsDrawer from './SettingsDrawer';
+import * as React from 'react';
+import SettingsDrawer from '../SettingsDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,15 +13,15 @@ import UploadIcon from '@material-ui/icons/CloudUpload';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles/index";
+import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
+const styles = () => ({
   list: {
     width: 300
   },
 });
 
-class NavigationDrawer extends React.Component {
+class NavigationDrawer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -88,7 +88,7 @@ class NavigationDrawer extends React.Component {
           onPaletteColorSelect={this.handlePaletteColorSelect}
         />
       </div>
-    )
+    );
   }
 }
 

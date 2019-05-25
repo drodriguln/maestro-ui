@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -13,7 +13,7 @@ import Slider from '@material-ui/lab/Slider';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const styles = theme => ({
+const styles = () => ({
   cover: {
     width: 350,
     height: 350,
@@ -25,18 +25,19 @@ const styles = theme => ({
     paddingBottom: 5
   },
   buttons: {
-    textAlign: 'center',
+    textAlign: 'center' as 'center',
     paddingLeft: 10,
     paddingRight: 10
   },
   progressBar: {
+    margin: '10px 0',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingBottom: 10
+    paddingBottom: 15
   }
 });
 
-class PopupPlayer extends React.Component {
+class PopupPlayer extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -61,7 +62,7 @@ class PopupPlayer extends React.Component {
         />
         <div>
           <div className={classes.text}>
-            <Typography variant="headline">
+            <Typography variant="h5">
               {song.name}
             </Typography>
             <Typography variant="caption">
@@ -111,12 +112,11 @@ class PopupPlayer extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    artist: state.player.artist,
-    album: state.player.album,
-    song: state.player.song
-  };
-}
+const mapStateToProps = ({ player }) => ({
+  artist: player.artist,
+  album: player.album,
+  song: player.song
+});
+
 const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);
 export default connect(mapStateToProps)(PopupPlayerWithStyles);
