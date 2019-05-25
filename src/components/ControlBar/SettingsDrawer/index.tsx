@@ -68,8 +68,8 @@ class SettingsDrawer extends React.Component<any, any> {
         <ListItemText primary="Dark" />
         <ListItemSecondaryAction>
           <Switch
+            color="primary" checked={this.props.themePalette.type === 'dark'}
             onChange={this.handleThemeTypeToggle}
-            checked={this.props.themePalette.type === 'dark'}
           />
         </ListItemSecondaryAction>
       </ListItem>

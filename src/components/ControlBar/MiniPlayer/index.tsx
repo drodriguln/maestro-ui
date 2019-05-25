@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../../store/player/actions';
-import PopupPlayer from '../PopupPlayer';
+import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../../../store/player/actions';
+import PopupPlayer from './PopupPlayer';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 import Popover from '@material-ui/core/Popover';
@@ -19,6 +19,9 @@ const styles = () => ({
     borderRadius: 24,
     display: 'inline-block',
     verticalAlign: 'bottom'
+  },
+  popupPlayerButton: {
+    padding: 0
   }
 });
 
@@ -142,10 +145,10 @@ class MiniPlayer extends React.Component<any, any> {
           </IconButton>
         </span>
         <span className={classes.controller}>
-          <IconButton onClick={this.handleOpenPopupPlayer}>
-            <CardMedia
+          <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
+            <img
               className={classes.artwork}
-              image={artworkFileUrl}
+              src={artworkFileUrl}
             />
           </IconButton>
         </span>

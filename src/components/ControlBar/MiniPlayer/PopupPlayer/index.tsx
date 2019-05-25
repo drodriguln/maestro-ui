@@ -30,9 +30,10 @@ const styles = () => ({
     paddingRight: 10
   },
   progressBar: {
+    margin: '10px 0',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingBottom: 10
+    paddingBottom: 15
   }
 });
 

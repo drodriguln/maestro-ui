@@ -2,7 +2,7 @@ import * as React from "react";
 import ControlBar from './ControlBar';
 import Pinboard from './Pinboard';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { pink } from '@material-ui/core/colors';
+import { blueGrey } from '@material-ui/core/colors';
 
 export default class Main extends React.Component<any, any> {
 
@@ -13,7 +13,7 @@ export default class Main extends React.Component<any, any> {
       theme: {
         palette: {
           type: 'dark',
-          primary: pink
+          primary: blueGrey
         }
       }
     }
