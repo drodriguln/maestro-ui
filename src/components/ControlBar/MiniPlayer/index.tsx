@@ -146,9 +146,9 @@ class MiniPlayer extends React.Component<any, any> {
         </span>
         <span className={classes.controller}>
           <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
-            <img
+            <CardMedia
               className={classes.artwork}
-              src={artworkFileUrl}
+              image={artworkFileUrl}
             />
           </IconButton>
         </span>
