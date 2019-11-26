@@ -15,16 +15,11 @@ import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import {makeStyles} from "@material-ui/core/styles";
 import {Pin} from "../../enum";
-import {Color} from "@material-ui/core";
-import {PaletteOptions} from "@material-ui/core/styles/createPalette";
 
 type Props = {
   isOpen: boolean;
-  themePalette: PaletteOptions;
   onClose: () => void;
   onSelect: (pin: Pin) => void;
-  onPaletteTypeSelect: (type: string) => void;
-  onPaletteColorSelect: (color: Color) => void;
 }
 
 const useStyles = makeStyles({
@@ -34,13 +29,11 @@ const useStyles = makeStyles({
 });
 
 const NavigationDrawer = (props: Props) => {
-  const { isOpen, onClose, themePalette, onSelect, onPaletteTypeSelect, onPaletteColorSelect } = props;
+  const { isOpen, onClose, onSelect } = props;
   const [isSettingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
   const classes = useStyles();
   const openSettingsDrawer = () => setSettingsDrawerOpen(true);
   const closeSettingsDrawer = () => setSettingsDrawerOpen(false);
-  const selectPaletteType = (type: string) => onPaletteTypeSelect(type);
-  const selectPaletteColor = (color: Color) => onPaletteColorSelect(color);
 
   return (
     <div>
@@ -84,13 +77,7 @@ const NavigationDrawer = (props: Props) => {
           </ListItem>
         </List>
       </Drawer>
-      <SettingsDrawer
-        isOpen={isSettingsDrawerOpen}
-        themePalette={themePalette}
-        onClose={closeSettingsDrawer}
-        onPaletteTypeSelect={selectPaletteType}
-        onPaletteColorSelect={selectPaletteColor}
-      />
+      <SettingsDrawer isOpen={isSettingsDrawerOpen} onClose={closeSettingsDrawer} />
     </div>
   );
 };

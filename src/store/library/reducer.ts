@@ -11,7 +11,7 @@ const initialState = {
   song: {} as Song
 };
 
-const reducer = (state = initialState, action: Action) => {
+const libraryReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case LibraryAction.SET_ARTISTS:
       return Object.assign({}, state, {
@@ -57,4 +57,4 @@ const reducer = (state = initialState, action: Action) => {
   }
 };
 
-export default reducer;
+export default libraryReducer;

@@ -15,14 +15,13 @@ import {
   green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
   purple, red, teal, yellow
 } from '@material-ui/core/colors';
-import {PaletteOptions} from "@material-ui/core/styles/createPalette";
 import {Color} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {Store} from "../../../store/types";
+import {setThemePaletteColor, setThemePaletteType} from "../../../store/theme/actions";
 
 type Props = {
-  themePalette: PaletteOptions;
   isOpen: boolean;
-  onPaletteTypeSelect: (type: string) => void;
-  onPaletteColorSelect: (color: Color) => void;
   onClose: () => void;
 }
 
@@ -54,46 +53,20 @@ const paletteColors = [
   {name: "Yellow", value: yellow}
 ];
 
-const SettingsDrawer = ({themePalette, isOpen, onPaletteTypeSelect, onPaletteColorSelect, onClose}: Props) => {
+const SettingsDrawer = ({isOpen, onClose}: Props) => {
+  const theme = useSelector((state: Store) => state.theme);
+  const dispatch = useDispatch();
   const classes = useStyles();
-  const handleThemeTypeToggle = () => onPaletteTypeSelect(themePalette.type === 'dark' ? 'light' : 'dark');
-  const createThemeTypeList = () => (
-    <List
-      className={classes.list}
-      subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
-      dense
-    >
-      <ListItem>
-        <ListItemText primary="Dark" />
-        <ListItemSecondaryAction>
-          <Switch
-            color="primary" checked={themePalette.type === 'dark'}
-            onChange={handleThemeTypeToggle}
-          />
-        </ListItemSecondaryAction>
-      </ListItem>
-    </List>
-  );
-  const createThemeColorList = () => (
-    <List
-      className={classes.list}
-      subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
-      dense
-    >
-      { paletteColors.map((color, index) =>
-        <ListItem
-          button
-          key={index}
-          onClick={() => onPaletteColorSelect(color.value)}
-        >
-          <ListItemText
-            primary={color.name}
-            secondary={color.value === themePalette.primary ? "Selected" : null}
-          />
-        </ListItem>
-      )}
-    </List>
-  );
+  const toggleThemePaletteType = () => {
+    if (theme.palette !== undefined) {
+      dispatch(setThemePaletteType(theme.palette.type === 'dark' ? 'light' : 'dark'));
+    }
+  };
+  const selectThemePaletteColor = (color: Color) => {
+    if (theme.palette !== undefined) {
+      dispatch(setThemePaletteColor(color))
+    }
+  };
 
   return (
     <Drawer open={isOpen} onClose={onClose}>
@@ -102,12 +75,43 @@ const SettingsDrawer = ({themePalette, isOpen, onPaletteTypeSelect, onPaletteCol
           <ListItemIcon>
             <BackIcon />
           </ListItemIcon>
-          <ListItemText primary="Back"/>
+          <ListItemText primary="Back" />
         </ListItem>
       </List>
       <Divider />
-      {createThemeTypeList()}
-      {createThemeColorList()}
+      <List
+        className={classes.list}
+        subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
+        dense
+      >
+        <ListItem>
+          <ListItemText primary="Dark" />
+          <ListItemSecondaryAction>
+            <Switch
+              color="primary" checked={theme.palette !== undefined && theme.palette.type === 'dark'}
+              onChange={toggleThemePaletteType}
+            />
+          </ListItemSecondaryAction>
+        </ListItem>
+      </List>
+      <List
+        className={classes.list}
+        subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
+        dense
+      >
+        { paletteColors.map((color, index) =>
+          <ListItem
+            button
+            key={index}
+            onClick={() => selectThemePaletteColor(color.value)}
+          >
+            <ListItemText
+              primary={color.name}
+              secondary={theme.palette !== undefined && color.value === theme.palette.primary ? "Selected" : undefined}
+            />
+          </ListItem>
+        )}
+      </List>
     </Drawer>
   );
 };

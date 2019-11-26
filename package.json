@@ -9,7 +9,7 @@
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "postinstall": "webpack --mode production",
-    "clean": "rm -rf dist node_modules"
+    "clean": "rm -rf dist"
   },
   "author": "Daniel A. Rodriguez",
   "devDependencies": {

@@ -11,7 +11,7 @@ const initialState = {
   artworkFileUrl: ''
 };
 
-const reducer = (state = initialState, action: Action) => {
+const playerReducer = (state = initialState, action: Action) => {
   switch(action.type) {
     case PlayerAction.SET_PLAYER_DATA:
       return Object.assign({}, state, action.payload);
@@ -24,4 +24,4 @@ const reducer = (state = initialState, action: Action) => {
   }
 };
 
-export default reducer;
+export default playerReducer;

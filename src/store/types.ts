@@ -1,14 +1,18 @@
 import {PlayerStore} from "./player/reducer";
 import {LibraryStore} from "./library/reducer";
+import {ThemeStore} from "./theme/reducer";
 import {ThunkDispatch} from "redux-thunk";
 import {AnyAction} from "redux";
 
 export interface Store {
   library: LibraryStore,
-  player: PlayerStore
+  player: PlayerStore,
+  theme: ThemeStore
 }
 
-export interface Action extends AnyAction{}
+export interface Action extends AnyAction {
+  payload: any;
+}
 export interface Dispatch extends ThunkDispatch<Store, any, Action>{}
 
 export interface Song {

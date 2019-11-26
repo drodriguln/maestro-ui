@@ -9,15 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MiniPlayer from './MiniPlayer';
-import {PaletteOptions} from "@material-ui/core/styles/createPalette";
 import {Pin} from "../enum";
 import {Store} from "../../store/types";
-import {Color} from "@material-ui/core";
 
 type Props = {
-  themePalette: PaletteOptions,
-  onPaletteTypeSelect: (type: string) => void;
-  onPaletteColorSelect: (color: Color) => void;
   onNavigationSelect: (pin: Pin) => void;
 }
 
@@ -35,7 +30,7 @@ const useStyles = makeStyles({
 });
 
 const ControlBar = (props: Props) => {
-  const { themePalette, onPaletteTypeSelect, onPaletteColorSelect, onNavigationSelect } = props;
+  const { onNavigationSelect } = props;
   const [isNavigationDrawerOpen, setNavigationDrawerOpen] = React.useState(false);
   const classes = useStyles();
   const player = useSelector((state: Store) => state.player);
@@ -72,10 +67,7 @@ const ControlBar = (props: Props) => {
       </AppBar>
       <NavigationDrawer
         isOpen={isNavigationDrawerOpen}
-        themePalette={themePalette}
         onSelect={setNavigationSelection}
-        onPaletteTypeSelect={onPaletteTypeSelect}
-        onPaletteColorSelect={onPaletteColorSelect}
         onClose={closeNavigationDrawer}
       />
     </div>
