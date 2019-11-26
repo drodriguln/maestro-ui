@@ -1,9 +1,9 @@
-import {Dispatch} from "../types";
-import {Color, PaletteType} from "@material-ui/core";
+import { Color, PaletteType } from '@material-ui/core';
+import { Dispatch } from '../types';
 
 export enum ThemeAction {
-  SET_PALETTE_COLOR = "SET_PALETTE_COLOR",
-  SET_PALETTE_TYPE = "SET_PALETTE_TYPE",
+  SET_PALETTE_COLOR = 'SET_PALETTE_COLOR',
+  SET_PALETTE_TYPE = 'SET_PALETTE_TYPE',
 }
 
 export const setThemePaletteColor = (color: Color) => (

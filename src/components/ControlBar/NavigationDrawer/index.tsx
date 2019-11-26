@@ -1,5 +1,4 @@
 import React from 'react';
-import SettingsDrawer from '../SettingsDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,8 +12,9 @@ import UploadIcon from '@material-ui/icons/CloudUpload';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import {makeStyles} from "@material-ui/core/styles";
-import {Pin} from "../../enum";
+import { makeStyles } from '@material-ui/core/styles';
+import SettingsDrawer from '../SettingsDrawer';
+import { Pin } from '../../enum';
 
 type Props = {
   isOpen: boolean;
@@ -24,7 +24,7 @@ type Props = {
 
 const useStyles = makeStyles({
   list: {
-    width: 300
+    width: 300,
   },
 });
 
@@ -40,14 +40,14 @@ const NavigationDrawer = (props: Props) => {
       <Drawer open={isOpen} onClose={onClose}>
         <List className={classes.list}>
           <ListItem onClick={onClose} button>
-            <ListItemIcon><BackIcon/></ListItemIcon>
+            <ListItemIcon><BackIcon /></ListItemIcon>
             <ListItemText primary="Close" />
           </ListItem>
         </List>
         <Divider />
         <List component="nav" className={classes.list} dense>
           <ListItem onClick={() => onSelect(Pin.LIBRARY)} button>
-            <ListItemIcon><LibraryIcon/></ListItemIcon>
+            <ListItemIcon><LibraryIcon /></ListItemIcon>
             <ListItemText primary="Music Library" />
           </ListItem>
           <Tooltip title="Coming Soon" placement="right">
@@ -71,9 +71,9 @@ const NavigationDrawer = (props: Props) => {
             </div>
           </Tooltip>
           <ListItem onClick={openSettingsDrawer} button>
-            <ListItemIcon><SettingsIcon/></ListItemIcon>
+            <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText primary="Settings" />
-            <ListItemIcon><SubMenuIcon/></ListItemIcon>
+            <ListItemIcon><SubMenuIcon /></ListItemIcon>
           </ListItem>
         </List>
       </Drawer>

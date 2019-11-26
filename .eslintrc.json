@@ -1,0 +1,35 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2019,
+        "project": "./tsconfig.json",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "import/no-unresolved": "off", // Disabled since it doesn't properly detect imports
+        "import/prefer-default-export": "off", // Personal preference
+        "max-len": ["error", {"code": 120}], // Personal preference
+        "no-mixed-operators": "off", // Personal preference
+        "no-plusplus": "off", // Personal preference (for loop usage)
+        "no-unused-vars": "off", // Disabled in favor of @typescript-eslint version
+        "react/jsx-filename-extension": "off" // Not working correctly -- complains about JSX being in .tsx files
+    }
+}

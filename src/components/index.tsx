@@ -1,11 +1,11 @@
 import React from 'react';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { useSelector } from 'react-redux';
 import ControlBar from './ControlBar';
 import Pinboard from './Pinboard';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { Pin } from "./enum";
-import {useSelector} from "react-redux";
-import {Store} from "../store/types";
+import { Pin } from './enum';
+import { Store } from '../store/types';
 
 const Main = () => {
   const [pin, setPin] = React.useState(Pin.START_SCREEN);

@@ -1,8 +1,8 @@
-import {PlayerStore} from "./player/reducer";
-import {LibraryStore} from "./library/reducer";
-import {ThemeStore} from "./theme/reducer";
-import {ThunkDispatch} from "redux-thunk";
-import {AnyAction} from "redux";
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { PlayerStore } from './player/reducer';
+import { LibraryStore } from './library/reducer';
+import { ThemeStore } from './theme/reducer';
 
 export interface Store {
   library: LibraryStore,

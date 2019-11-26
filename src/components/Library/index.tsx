@@ -1,8 +1,6 @@
 import React from 'react';
-import { setPlayerData } from '../../store/player/actions';
-import { fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong } from '../../store/library/actions';
 import isEmpty from 'is-empty';
-import {makeStyles, Theme} from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -13,8 +11,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import {Album, Artist, Song, Store} from "../../store/types";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Album, Artist, Song, Store,
+} from '../../store/types';
+import {
+  fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong,
+} from '../../store/library/actions';
+import { setPlayerData } from '../../store/player/actions';
 
 enum Panel {
   ARTIST,
@@ -25,20 +29,20 @@ enum Panel {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   panelList: {
     overflowY: 'auto',
-    maxHeight: '150px'
+    maxHeight: '150px',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     flexBasis: '33.33%',
-    flexShrink: 0
+    flexShrink: 0,
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -50,7 +54,9 @@ const LoadingIndicator = () => (
 
 const Library = () => {
   const [selectedPanel, setSelectedPanel] = React.useState(Panel.NONE);
-  const { artists, artist, albums, album, songs, song } = useSelector((state: Store) => state.library);
+  const {
+    artists, artist, albums, album, songs, song,
+  } = useSelector((state: Store) => state.library);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -79,37 +85,43 @@ const Library = () => {
     dispatch(setPlayerData(artist, album, selectedSong, songs));
   };
   const createArtistList = () => (
-    isEmpty(artists) ?
-      <LoadingIndicator /> :
-      <List>
-        { artists.map((selectedArtist: Artist) => (
-          <ListItem key={selectedArtist.id} button onClick={() => selectArtist(selectedArtist)}>
-            <ListItemText secondary={selectedArtist.name} />
-          </ListItem>
-        ))}
-      </List>
+    isEmpty(artists)
+      ? <LoadingIndicator />
+      : (
+        <List>
+          { artists.map((selectedArtist: Artist) => (
+            <ListItem key={selectedArtist.id} button onClick={() => selectArtist(selectedArtist)}>
+              <ListItemText secondary={selectedArtist.name} />
+            </ListItem>
+          ))}
+        </List>
+      )
   );
   const createAlbumList = () => (
-    isEmpty(albums) ?
-      <LoadingIndicator /> :
-      <List>
-        { albums.map((selectedAlbum: Album) => (
-          <ListItem key={selectedAlbum.id} button onClick={() => selectAlbum(selectedAlbum)}>
-            <ListItemText secondary={selectedAlbum.name} />
-          </ListItem>
-        ))}
-      </List>
+    isEmpty(albums)
+      ? <LoadingIndicator />
+      : (
+        <List>
+          { albums.map((selectedAlbum: Album) => (
+            <ListItem key={selectedAlbum.id} button onClick={() => selectAlbum(selectedAlbum)}>
+              <ListItemText secondary={selectedAlbum.name} />
+            </ListItem>
+          ))}
+        </List>
+      )
   );
   const createSongList = () => (
-    isEmpty(songs) ?
-      <LoadingIndicator /> :
-      <List>
-        { songs.map((selectedSong: Song) => (
-          <ListItem key={selectedSong.id} button onClick={() => selectSong(selectedSong)}>
-            <ListItemText secondary={selectedSong.name} />
-          </ListItem>
-        ))}
-      </List>
+    isEmpty(songs)
+      ? <LoadingIndicator />
+      : (
+        <List>
+          { songs.map((selectedSong: Song) => (
+            <ListItem key={selectedSong.id} button onClick={() => selectSong(selectedSong)}>
+              <ListItemText secondary={selectedSong.name} />
+            </ListItem>
+          ))}
+        </List>
+      )
   );
 
   return (
