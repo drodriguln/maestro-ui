@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { setPlayerData, fetchSongFileUrl, fetchArtworkFileUrl } from '../../../store/player/actions';
 import PopupPlayer from './PopupPlayer';
-import { withStyles } from '@material-ui/core/styles';
+import {createStyles, withStyles} from "@material-ui/core/styles";
 import CardMedia from '@material-ui/core/CardMedia';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,9 +10,29 @@ import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseCircleIcon from '@material-ui/icons/PauseCircleOutline';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import AudioPlayer from 'react-audio-player';
+import {Album, Artist, Song, Store} from "../../../store/types";
+import ReactAudioPlayer from "react-audio-player";
 
-const styles = () => ({
+type Props = {
+  classes: Record<keyof typeof styles, string>;
+  artist?: Artist;
+  album?: Album;
+  song?: Song;
+  playlist?: Song[];
+  songFileUrl?: string;
+  artworkFileUrl?: string;
+  setPlayerData?: (artist: Artist, album: Album, song: Song, playlist: Song[]) => void;
+  fetchSongFileUrl?: (artistId: string, albumId: string, songId: string) => void;
+  fetchArtworkFileUrl?: (artistId: string, albumId: string, songId: string) => void;
+}
+
+type State = {
+  isPlaying: boolean;
+  currentPosition: number;
+  popupPlayerAnchorEl?: HTMLElement;
+}
+
+const styles = createStyles({
   artwork: {
     width: 48,
     height: 48,
@@ -25,133 +45,143 @@ const styles = () => ({
   }
 });
 
-interface MiniPlayer {
-  audioNode: {
-    audioEl: HTMLAudioElement
-  }
-}
+class MiniPlayer extends React.Component<Props, State> {
+  audioNode?: ReactAudioPlayer;
 
-class MiniPlayer extends React.Component<any, any> {
-
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
+    const { artist, album, song } = props;
     this.state = {
       isPlaying: true,
-      currentPosition: 0,
-      popupPlayerAnchorEl: null
+      currentPosition: 0
     };
-    this.load(this.props.artist.id, this.props.album.id, this.props.song.id);
-  }
-
-  componentWillUpdate(nextProps, nextState, nextContext) {
-    if (this.props.artist.id !== nextProps.artist.id
-      || this.props.album.id !== nextProps.album.id
-      || this.props.song.id !== nextProps.song.id)
-    {
-      this.load(nextProps.artist.id, nextProps.album.id, nextProps.song.id);
+    if (artist !== undefined && album !== undefined && song !== undefined) {
+      this.load(artist.id, album.id, song.id);
     }
   }
 
-  load = (artistId, albumId, songId) => {
+  componentWillUpdate(nextProps: Props) {
+    const { artist = {} as Artist, album = {} as Album, song = {} as Song } = this.props;
+    const {
+      artist: nextArtist = {} as Artist, album: nextAlbum = {} as Album, song: nextSong = {} as Song
+    } = nextProps;
+
+    if (artist.id !== nextArtist.id || album.id !== nextAlbum.id || song.id !== nextSong.id) {
+      this.load(nextArtist.id, nextAlbum.id, nextSong.id);
+    }
+  }
+
+  load = (artistId: string, albumId: string, songId: string) => {
+    const { fetchSongFileUrl, fetchArtworkFileUrl } = this.props;
     if (this.audioNode !== undefined) {
       this.stop();
       this.setState({ currentPosition: 0 });
     }
-    this.props.fetchSongFileUrl(artistId, albumId, songId);
-    this.props.fetchArtworkFileUrl(artistId, albumId, songId);
+    if (fetchSongFileUrl !== undefined) {
+      fetchSongFileUrl(artistId, albumId, songId);
+    }
+    if (fetchArtworkFileUrl !== undefined) {
+      fetchArtworkFileUrl(artistId, albumId, songId);
+    }
   };
 
   play = () =>  {
-    this.audioNode.audioEl.play();
+    if (this.audioNode !== undefined) {
+      this.audioNode.audioEl.play();
+    }
     this.setState({ isPlaying: true });
   };
 
   stop = () => {
-    this.audioNode.audioEl.pause();
-    this.audioNode.audioEl.currentTime = 0;
+    if (this.audioNode !== undefined) {
+      this.audioNode.audioEl.pause();
+      this.audioNode.audioEl.currentTime = 0;
+    }
   };
 
   pause = () => {
-    this.audioNode.audioEl.pause();
+    if (this.audioNode !== undefined) {
+      this.audioNode.audioEl.pause();
+    }
     this.setState({ isPlaying: false });
   };
 
   previous = () => {
-    const { artist, album, song, playlist } = this.props;
+    const {
+      artist = {} as Artist, album = {} as Album, song = {} as Song, playlist = [] as Song[],
+      setPlayerData
+    } = this.props;
     for (let i = 0; i < playlist.length; i++) {
-      if (playlist[i].id === song.id && i > 0) {
-        this.props.setPlayerData(artist, album, playlist[i - 1], playlist);
+      if (playlist[i].id === song.id && i > 0 && setPlayerData !== undefined) {
+        setPlayerData(artist, album, playlist[i - 1], playlist);
         break;
       }
     }
   };
 
   next = () => {
-    const { artist, album, song, playlist } = this.props;
+    const {
+      artist = {} as Artist, album = {} as Album, song = {} as Song, playlist = [] as Song[],
+      setPlayerData
+    } = this.props;
     for (let i = 0; i < playlist.length; i++) {
-      if (playlist[i].id === song.id && i < playlist.length - 1) {
-        this.props.setPlayerData(artist, album, playlist[i + 1], playlist);
+      if (playlist[i].id === song.id && i < playlist.length - 1 && setPlayerData !== undefined) {
+        setPlayerData(artist, album, playlist[i + 1], playlist);
         break;
       }
     }
   };
 
-  setAudioNode = (node) => this.audioNode = node;
-  setCurrentTrackedPosition = (position) => {
+  setAudioNode = (node: ReactAudioPlayer) => this.audioNode = node;
+  setCurrentTrackedPosition = (position: number) => {
     let songLength = this.audioNode !== undefined ? this.audioNode.audioEl.duration : 1;
     this.setState({ currentPosition: position / songLength * 100 });
   };
-  changeCurrentPosition = (position) => {
-    this.audioNode.audioEl.currentTime = (position * this.audioNode.audioEl.duration) / 100;
+  changeCurrentPosition = (position: number) => {
+    if (this.audioNode !== undefined) {
+      this.audioNode.audioEl.currentTime = (position * this.audioNode.audioEl.duration) / 100;
+    }
     this.setState({ currentPosition: position });
   };
 
-  handleOpenPopupPlayer = event => {
+  handleOpenPopupPlayer = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ popupPlayerAnchorEl: event.currentTarget });
   };
 
   handleClosePopupPlayer = () => {
-    this.setState({ popupPlayerAnchorEl: null });
+    this.setState({ popupPlayerAnchorEl: undefined });
   };
 
   render() {
-    const { songFileUrl, artworkFileUrl, classes } = this.props;
+    const { songFileUrl = "", artworkFileUrl = "", classes } = this.props;
     const { isPlaying, currentPosition, popupPlayerAnchorEl } = this.state;
     return (
       <div>
-        <AudioPlayer
+        <ReactAudioPlayer
           autoPlay
           src={songFileUrl}
           ref={this.setAudioNode}
           listenInterval={100}
           onListen={this.setCurrentTrackedPosition}
         />
-        <span className={classes.controller}>
-          <IconButton>
-            <SkipPreviousIcon onClick={this.previous} />
-          </IconButton>
-        </span>
-        <span className={classes.controller}>
-          <IconButton onClick={isPlaying ? this.pause : this.play}>
-            { isPlaying
-              ? <PauseCircleIcon />
-              : <PlayArrowIcon />
-            }
-          </IconButton>
-        </span>
-        <span className={classes.controller}>
-          <IconButton onClick={this.next}>
-            <SkipNextIcon />
-          </IconButton>
-        </span>
-        <span className={classes.controller}>
-          <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
-            <CardMedia
-              className={classes.artwork}
-              image={artworkFileUrl}
-            />
-          </IconButton>
-        </span>
+        <IconButton>
+          <SkipPreviousIcon onClick={this.previous} />
+        </IconButton>
+        <IconButton onClick={isPlaying ? this.pause : this.play}>
+          { isPlaying
+            ? <PauseCircleIcon />
+            : <PlayArrowIcon />
+          }
+        </IconButton>
+        <IconButton onClick={this.next}>
+          <SkipNextIcon />
+        </IconButton>
+        <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
+          <CardMedia
+            className={classes.artwork}
+            image={artworkFileUrl}
+          />
+        </IconButton>
         <Popover
           open={popupPlayerAnchorEl != null}
           anchorEl={popupPlayerAnchorEl}
@@ -176,14 +206,17 @@ class MiniPlayer extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = ({ player }) => ({
-  artist: player.artist,
-  album: player.album,
-  song: player.song,
-  playlist: player.playlist,
-  songFileUrl: player.songFileUrl,
-  artworkFileUrl: player.artworkFileUrl
-});
+const mapStateToProps = ({ player: playerStore }: Store) => {
+  const { artist, album, song, playlist, songFileUrl, artworkFileUrl } = playerStore;
+  return {
+    artist: artist,
+    album: album,
+    song: song,
+    playlist: playlist,
+    songFileUrl: songFileUrl,
+    artworkFileUrl: artworkFileUrl
+  }
+};
 
 const mapDispatchToProps = {
   setPlayerData: setPlayerData,
@@ -191,5 +224,5 @@ const mapDispatchToProps = {
   fetchArtworkFileUrl: fetchArtworkFileUrl
 };
 
-const MiniPlayerWithStyles = withStyles(styles, { withTheme: true })(MiniPlayer);
-export default connect(mapStateToProps, mapDispatchToProps)(MiniPlayerWithStyles);
+const StyledMiniPlayer = withStyles(styles)(MiniPlayer);
+export default connect(mapStateToProps, mapDispatchToProps)(StyledMiniPlayer);

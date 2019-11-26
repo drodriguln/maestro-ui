@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import SettingsDrawer from '../SettingsDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -13,83 +13,86 @@ import UploadIcon from '@material-ui/icons/CloudUpload';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SubMenuIcon from '@material-ui/icons/KeyboardArrowRight';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
+import {Pin} from "../../enum";
+import {Color} from "@material-ui/core";
+import {PaletteOptions} from "@material-ui/core/styles/createPalette";
 
-const styles = () => ({
+type Props = {
+  isOpen: boolean;
+  themePalette: PaletteOptions;
+  onClose: () => void;
+  onSelect: (pin: Pin) => void;
+  onPaletteTypeSelect: (type: string) => void;
+  onPaletteColorSelect: (color: Color) => void;
+}
+
+const useStyles = makeStyles({
   list: {
     width: 300
   },
 });
 
-class NavigationDrawer extends React.Component<any, any> {
+const NavigationDrawer = (props: Props) => {
+  const { isOpen, onClose, themePalette, onSelect, onPaletteTypeSelect, onPaletteColorSelect } = props;
+  const [isSettingsDrawerOpen, setSettingsDrawerOpen] = React.useState(false);
+  const classes = useStyles();
+  const openSettingsDrawer = () => setSettingsDrawerOpen(true);
+  const closeSettingsDrawer = () => setSettingsDrawerOpen(false);
+  const selectPaletteType = (type: string) => onPaletteTypeSelect(type);
+  const selectPaletteColor = (color: Color) => onPaletteColorSelect(color);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSettingsDrawerOpen: false
-    }
-  }
+  return (
+    <div>
+      <Drawer open={isOpen} onClose={onClose}>
+        <List className={classes.list}>
+          <ListItem onClick={onClose} button>
+            <ListItemIcon><BackIcon/></ListItemIcon>
+            <ListItemText primary="Close" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List component="nav" className={classes.list} dense>
+          <ListItem onClick={() => onSelect(Pin.LIBRARY)} button>
+            <ListItemIcon><LibraryIcon/></ListItemIcon>
+            <ListItemText primary="Music Library" />
+          </ListItem>
+          <Tooltip title="Coming Soon" placement="right">
+            <div>
+              <ListItem button disabled>
+                <ListItemIcon>
+                  <EditIcon />
+                </ListItemIcon>
+                <ListItemText primary="Edit Library" />
+              </ListItem>
+            </div>
+          </Tooltip>
+          <Tooltip title="Coming Soon" placement="right">
+            <div>
+              <ListItem button disabled>
+                <ListItemIcon>
+                  <UploadIcon />
+                </ListItemIcon>
+                <ListItemText primary="File Upload" />
+              </ListItem>
+            </div>
+          </Tooltip>
+          <ListItem onClick={openSettingsDrawer} button>
+            <ListItemIcon><SettingsIcon/></ListItemIcon>
+            <ListItemText primary="Settings" />
+            <ListItemIcon><SubMenuIcon/></ListItemIcon>
+          </ListItem>
+        </List>
+      </Drawer>
+      <SettingsDrawer
+        isOpen={isSettingsDrawerOpen}
+        themePalette={themePalette}
+        onClose={closeSettingsDrawer}
+        onPaletteTypeSelect={selectPaletteType}
+        onPaletteColorSelect={selectPaletteColor}
+      />
+    </div>
+  );
+};
 
-  openSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: true });
-  closeSettingsDrawer = () => this.setState({ isSettingsDrawerOpen: false });
-  handlePaletteTypeSelect = (type) => this.props.onPaletteTypeSelect(type);
-  handlePaletteColorSelect = (color) => this.props.onPaletteColorSelect(color);
-
-  render() {
-    const { isOpen, onClose, onSelect, classes, themePalette } = this.props;
-    return (
-      <div>
-        <Drawer open={isOpen} onClose={onClose}>
-          <List className={classes.list}>
-            <ListItem onClick={onClose} button>
-              <ListItemIcon><BackIcon/></ListItemIcon>
-              <ListItemText primary="Close"/>
-            </ListItem>
-          </List>
-          <Divider />
-          <List component="nav" className={classes.list} dense>
-            <ListItem onClick={() => onSelect('library')} button>
-              <ListItemIcon><LibraryIcon/></ListItemIcon>
-              <ListItemText primary="Music Library"/>
-            </ListItem>
-            <Tooltip title="Coming Soon" placement="left">
-              <span>
-                <ListItem button disabled>
-                  <ListItemIcon>
-                    <EditIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Edit Library"/>
-                </ListItem>
-              </span>
-            </Tooltip>
-            <Tooltip title="Coming Soon" placement="left">
-              <span>
-                <ListItem button disabled>
-                  <ListItemIcon>
-                    <UploadIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="File Upload"/>
-                </ListItem>
-              </span>
-            </Tooltip>
-            <ListItem onClick={this.openSettingsDrawer} button>
-              <ListItemIcon><SettingsIcon/></ListItemIcon>
-              <ListItemText primary="Settings"/>
-              <ListItemIcon><SubMenuIcon/></ListItemIcon>
-            </ListItem>
-          </List>
-        </Drawer>
-        <SettingsDrawer
-          className={classes.list}
-          isOpen={this.state.isSettingsDrawerOpen}
-          themePalette={themePalette}
-          onClose={this.closeSettingsDrawer}
-          onPaletteTypeSelect={this.handlePaletteTypeSelect}
-          onPaletteColorSelect={this.handlePaletteColorSelect}
-        />
-      </div>
-    );
-  }
-}
-
-export default withStyles(styles)(NavigationDrawer);
+export default NavigationDrawer;

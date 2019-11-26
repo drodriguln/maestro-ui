@@ -1,37 +1,38 @@
-import * as React from 'react';
+import React from 'react';
 import Library from '../Library';
+import { makeStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from "@material-ui/core/styles";
+import {Pin} from "../enum";
 
 /*
- * To be replaced with React Router implementation when
- * file upload and edit library options are added.
+ * TO DO: Replace implementation with React Router implementation.
  */
 
-const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2
-  },
-});
+type Props = {
+  pin: Pin;
+}
 
-const Pinboard = (props) => (
-  props.pin === 'library'
-    ? <Library />
-    : <Paper className={props.classes.paper} elevation={1}>
-        <Typography variant="h5">
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: theme.spacing(2)
+  },
+}));
+
+const Pinboard = ({ pin }: Props) => {
+  const classes = useStyles();
+  return (
+    pin === Pin.LIBRARY
+      ? <Library />
+      : <Paper className={classes.paper}>
+        <Typography variant="h5" gutterBottom>
           Select a song to get started.
         </Typography>
-          <br/>
         <Typography>
-          The main menu can be accessed in the top left. Currently, editing and uploading songs is unsupported,
-          but there are some free-domain songs available to try out.
-        </Typography>
-          <br/>
-        <Typography>
-          After selecting a song, be sure to click the artwork button to expand the full music player. Oh, and feel free to toy around with the theme colors in settings. Enjoy!
+          The main menu can be accessed in the top left. After selecting a song, be sure to click the artwork button to expand the full music player.
         </Typography>
       </Paper>
-);
+  );
+};
 
-export default withStyles(styles)(Pinboard);
+export default Pinboard;

@@ -1,17 +1,19 @@
-import { SET_ARTISTS, SET_ARTIST, SET_ALBUMS, SET_ALBUM, SET_SONGS, SET_SONG } from './actions';
+import { LibraryAction } from './actions';
+import {Action, Album, Artist, Song} from "../types";
 
+export type LibraryStore = typeof initialState;
 const initialState = {
-  artists: [],
-  artist: {},
-  albums: [],
-  album: {},
-  songs: [],
-  song: {}
+  artists: [] as Artist[],
+  artist: {} as Artist,
+  albums: [] as Album[],
+  album: {} as Album,
+  songs: [] as Song[],
+  song: {} as Song
 };
 
-const reducer = (state = initialState, action) => {
-  switch(action.type) {
-    case SET_ARTISTS:
+const reducer = (state = initialState, action: Action) => {
+  switch (action.type) {
+    case LibraryAction.SET_ARTISTS:
       return Object.assign({}, state, {
         artists: action.payload,
         artist: {},
@@ -20,7 +22,7 @@ const reducer = (state = initialState, action) => {
         songs: [],
         song: {}
       });
-    case SET_ARTIST:
+    case LibraryAction.SET_ARTIST:
       return Object.assign({}, state, {
         artist: action.payload,
         albums: [],
@@ -28,26 +30,28 @@ const reducer = (state = initialState, action) => {
         songs: [],
         song: {}
       });
-    case SET_ALBUMS:
+    case LibraryAction.SET_ALBUMS:
       return Object.assign({}, state, {
         albums: action.payload,
         album: {},
         songs: [],
         song: {}
       });
-    case SET_ALBUM:
+    case LibraryAction.SET_ALBUM:
       return Object.assign({}, state, {
         album: action.payload,
         songs: [],
         song: {}
       });
-    case SET_SONGS:
+    case LibraryAction.SET_SONGS:
       return Object.assign({}, state, {
         songs: action.payload,
         song: {}
       });
-    case SET_SONG:
-      return Object.assign({}, state, { song: action.payload });
+    case LibraryAction.SET_SONG:
+      return Object.assign({}, state, {
+        song: action.payload
+      });
     default:
       return state;
   }

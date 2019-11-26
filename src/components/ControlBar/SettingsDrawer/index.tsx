@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,14 +9,24 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
-    amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
-    green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
-    purple, red, teal, yellow
-  } from '@material-ui/core/colors';
+  amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
+  green, grey, indigo, lightBlue, lightGreen, lime, orange, pink,
+  purple, red, teal, yellow
+} from '@material-ui/core/colors';
+import {PaletteOptions} from "@material-ui/core/styles/createPalette";
+import {Color} from "@material-ui/core";
 
-const styles = () => ({
+type Props = {
+  themePalette: PaletteOptions;
+  isOpen: boolean;
+  onPaletteTypeSelect: (type: string) => void;
+  onPaletteColorSelect: (color: Color) => void;
+  onClose: () => void;
+}
+
+const useStyles = makeStyles({
   list: {
     width: 300
   },
@@ -44,23 +54,12 @@ const paletteColors = [
   {name: "Yellow", value: yellow}
 ];
 
-class SettingsDrawer extends React.Component<any, any> {
-
-  constructor(props) {
-    super(props);
-  }
-
-  handleThemeTypeToggle = () => {
-    this.props.onPaletteTypeSelect(
-      this.props.themePalette.type === 'dark'
-        ? 'light'
-        : 'dark'
-    );
-  };
-
-  createThemeTypeList = () => (
+const SettingsDrawer = ({themePalette, isOpen, onPaletteTypeSelect, onPaletteColorSelect, onClose}: Props) => {
+  const classes = useStyles();
+  const handleThemeTypeToggle = () => onPaletteTypeSelect(themePalette.type === 'dark' ? 'light' : 'dark');
+  const createThemeTypeList = () => (
     <List
-      className={this.props.classes.list}
+      className={classes.list}
       subheader={<ListSubheader disableSticky>Theme Type</ListSubheader>}
       dense
     >
@@ -68,52 +67,49 @@ class SettingsDrawer extends React.Component<any, any> {
         <ListItemText primary="Dark" />
         <ListItemSecondaryAction>
           <Switch
-            color="primary" checked={this.props.themePalette.type === 'dark'}
-            onChange={this.handleThemeTypeToggle}
+            color="primary" checked={themePalette.type === 'dark'}
+            onChange={handleThemeTypeToggle}
           />
         </ListItemSecondaryAction>
       </ListItem>
     </List>
   );
-
-  createThemeColorList = () => (
-      <List
-        className={this.props.classes.list}
-        subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
-        dense
-      >
-        { paletteColors.map((color, index) =>
-          <ListItem
-            button
-            key={index}
-            onClick={() => this.props.onPaletteColorSelect(color.value)}
-          >
-            <ListItemText
-              primary={color.name}
-              secondary={color.value === this.props.themePalette.primary ? "Selected" : null}
-            />
-          </ListItem>
-        )}
-      </List>
+  const createThemeColorList = () => (
+    <List
+      className={classes.list}
+      subheader={<ListSubheader disableSticky>Theme Colors</ListSubheader>}
+      dense
+    >
+      { paletteColors.map((color, index) =>
+        <ListItem
+          button
+          key={index}
+          onClick={() => onPaletteColorSelect(color.value)}
+        >
+          <ListItemText
+            primary={color.name}
+            secondary={color.value === themePalette.primary ? "Selected" : null}
+          />
+        </ListItem>
+      )}
+    </List>
   );
 
-  render() {
-    return (
-      <Drawer open={this.props.isOpen} onClose={this.props.onClose}>
-        <List className={this.props.classes.list}>
-          <ListItem onClick={this.props.onClose} button>
-            <ListItemIcon>
-              <BackIcon />
-            </ListItemIcon>
-            <ListItemText primary="Back"/>
-          </ListItem>
-        </List>
-        <Divider />
-        {this.createThemeTypeList()}
-        {this.createThemeColorList()}
-      </Drawer>
-    );
-  }
-}
+  return (
+    <Drawer open={isOpen} onClose={onClose}>
+      <List className={classes.list}>
+        <ListItem onClick={onClose} button>
+          <ListItemIcon>
+            <BackIcon />
+          </ListItemIcon>
+          <ListItemText primary="Back"/>
+        </ListItem>
+      </List>
+      <Divider />
+      {createThemeTypeList()}
+      {createThemeColorList()}
+    </Drawer>
+  );
+};
 
-export default withStyles(styles)(SettingsDrawer);
+export default SettingsDrawer;

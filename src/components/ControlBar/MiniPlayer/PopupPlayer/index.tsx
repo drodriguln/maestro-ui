@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import {useSelector} from "react-redux";
+import {makeStyles} from "@material-ui/core/styles";
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
@@ -9,11 +9,23 @@ import PauseCircleIcon from '@material-ui/icons/PauseCircleOutline';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import RepeatIcon from '@material-ui/icons/Repeat';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
+import {Store} from "../../../../store/types";
 
-const styles = () => ({
+type Props = {
+  songArtworkUrl: string;
+  isPlaying: boolean;
+  currentPosition: number;
+  onChangePosition: (position: number) => void;
+  onPlay: () => void;
+  onPause: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+}
+
+const useStyles = makeStyles({
   cover: {
     width: 350,
     height: 350,
@@ -25,98 +37,79 @@ const styles = () => ({
     paddingBottom: 5
   },
   buttons: {
-    textAlign: 'center' as 'center',
+    textAlign: "center",
     paddingLeft: 10,
     paddingRight: 10
   },
   progressBar: {
-    margin: '10px 0',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingBottom: 15
+    paddingBottom: 5
   }
 });
 
-class PopupPlayer extends React.Component<any, any> {
+const PopupPlayer = (props: Props) => {
+  const { songArtworkUrl, isPlaying, currentPosition, onChangePosition, onPlay, onPause, onPrevious, onNext } = props;
+  const { artist, album, song } = useSelector((state: Store) => state.library);
+  const classes = useStyles();
+  const onChangeSliderPosition = (event: React.ChangeEvent<any>, value: number | number[]) => {
+    if (typeof value === "number") {
+      onChangePosition(value);
+    }
+  };
 
-  constructor(props) {
-    super(props);
-  }
-
-  play = () => this.props.onPlay();
-  pause = () => this.props.onPause();
-  previous = () => this.props.onPrevious();
-  next = () => this.props.onNext();
-  changeSliderPosition = (event, value) => this.props.onChangePosition(value);
-
-  render() {
-    const {
-      classes, artist, album, song,
-      songArtworkUrl, isPlaying, currentPosition
-    } = this.props;
-    return (
+  return (
+    <div>
+      <CardMedia className={classes.cover} image={songArtworkUrl} />
       <div>
-        <CardMedia
-          className={classes.cover}
-          image={songArtworkUrl}
-        />
-        <div>
-          <div className={classes.text}>
-            <Typography variant="h5">
-              {song.name}
-            </Typography>
-            <Typography variant="caption">
-              {album.name}
-            </Typography>
-            <Typography variant="caption">
-              {artist.name}
-            </Typography>
-          </div>
-          <div className={classes.buttons}>
-            <Tooltip title="Coming Soon" placement="top">
+        <div className={classes.text}>
+          <Typography variant="h5">
+            {song.name}
+          </Typography>
+          <Typography variant="caption" display="block">
+            {album.name}
+          </Typography>
+          <Typography variant="caption" display="block">
+            {artist.name}
+          </Typography>
+        </div>
+        <div className={classes.buttons}>
+          <Tooltip title="Coming Soon" placement="top">
               <span>
                 <IconButton disabled>
                   <RepeatIcon />
                 </IconButton>
               </span>
-            </Tooltip>
-            <IconButton onClick={this.previous}>
-              <SkipPreviousIcon />
-            </IconButton>
-            <IconButton onClick={isPlaying ? this.pause : this.play}>
-              { isPlaying
-                ? <PauseCircleIcon />
-                : <PlayArrowIcon />
-              }
-            </IconButton>
-            <IconButton onClick={this.next}>
-              <SkipNextIcon />
-            </IconButton>
-            <Tooltip title="Coming Soon" placement="top">
+          </Tooltip>
+          <IconButton onClick={onPrevious}>
+            <SkipPreviousIcon />
+          </IconButton>
+          <IconButton onClick={isPlaying ? onPause : onPlay}>
+            { isPlaying
+              ? <PauseCircleIcon />
+              : <PlayArrowIcon />
+            }
+          </IconButton>
+          <IconButton onClick={onNext}>
+            <SkipNextIcon />
+          </IconButton>
+          <Tooltip title="Coming Soon" placement="top">
               <span>
                 <IconButton disabled>
                   <ShuffleIcon />
                 </IconButton>
               </span>
-            </Tooltip>
-          </div>
-          <div className={classes.progressBar}>
-            <Slider
-              value={currentPosition}
-              onChange={this.changeSliderPosition}
-            />
-          </div>
+          </Tooltip>
+        </div>
+        <div className={classes.progressBar}>
+          <Slider
+            value={currentPosition}
+            onChange={onChangeSliderPosition}
+          />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-const mapStateToProps = ({ player }) => ({
-  artist: player.artist,
-  album: player.album,
-  song: player.song
-});
-
-const PopupPlayerWithStyles = withStyles(styles, { withTheme: true })(PopupPlayer);
-export default connect(mapStateToProps)(PopupPlayerWithStyles);
+export default PopupPlayer;
