@@ -16,7 +16,7 @@ import {
   Album, Artist, Song, Store,
 } from '../../store/types';
 import {
-  fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, setSong,
+  fetchArtists, fetchAlbums, fetchSongs, setArtist, setAlbum, reset as resetLibrary,
 } from '../../store/library/actions';
 import { setPlayerData } from '../../store/player/actions';
 
@@ -24,7 +24,7 @@ enum Panel {
   ARTIST,
   ALBUM,
   SONG,
-  NONE
+  NONE,
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,7 +81,7 @@ const Library = () => {
   };
   const selectSong = (selectedSong: Song) => {
     setSelectedPanel(Panel.NONE);
-    dispatch(setSong(selectedSong));
+    dispatch(resetLibrary());
     dispatch(setPlayerData(artist, album, selectedSong, songs));
   };
   const createArtistList = () => (

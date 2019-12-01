@@ -11,7 +11,7 @@ export interface Store {
 }
 
 export interface Action extends AnyAction {
-  payload: any;
+  payload?: any;
 }
 export interface Dispatch extends ThunkDispatch<Store, any, Action>{}
 

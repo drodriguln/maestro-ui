@@ -56,10 +56,9 @@ const libraryReducer = (state = initialState, action: Action) => {
         songs: action.payload,
         song: {} as Song,
       };
-    case LibraryAction.SET_SONG:
+    case LibraryAction.RESET:
       return {
-        ...state,
-        song: action.payload,
+        ...initialState,
       };
     default:
       return state;
