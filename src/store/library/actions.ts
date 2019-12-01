@@ -1,6 +1,7 @@
 import {
   Album, Artist, Dispatch, Song,
 } from '../types';
+import config from '../../config';
 
 interface ApiResponse {
   data: Artist[] | Album[] | Song[];
@@ -16,9 +17,6 @@ export enum LibraryAction {
   RESET = 'RESET'
 }
 
-// Needs to be externalized to some config file.
-const API_URL = 'https://drodriguln-maestro-api.herokuapp.com/artists/';
-
 export const setArtist = (artist: Artist) => (
   (dispatch: Dispatch) => dispatch({ type: LibraryAction.SET_ARTIST, payload: artist })
 );
@@ -32,7 +30,7 @@ export const reset = () => (
 );
 
 export const fetchArtists = () => (
-  (dispatch: Dispatch) => fetch(API_URL)
+  (dispatch: Dispatch) => fetch(config.apiUrl)
     .then((response) => {
       if (response.ok) return response.json();
       throw new Error('Failed to retrieve list of artists.');
@@ -43,7 +41,7 @@ export const fetchArtists = () => (
 );
 
 export const fetchAlbums = (artistId: string) => (
-  (dispatch: Dispatch) => fetch(`${API_URL}${artistId}/albums`)
+  (dispatch: Dispatch) => fetch(`${config.apiUrl}${artistId}/albums`)
     .then((response) => {
       if (response.ok) return response.json();
       throw new Error('Failed to retrieve list of albums.');
@@ -54,7 +52,7 @@ export const fetchAlbums = (artistId: string) => (
 );
 
 export const fetchSongs = (artistId: string, albumId: string) => (
-  (dispatch: Dispatch) => fetch(`${API_URL}${artistId}/albums/${albumId}/songs`)
+  (dispatch: Dispatch) => fetch(`${config.apiUrl}${artistId}/albums/${albumId}/songs`)
     .then((response) => {
       if (response.ok) return response.json();
       throw new Error('Failed to retrieve list of songs.');

@@ -1,9 +1,7 @@
 import {
   Album, Artist, Dispatch, Song,
 } from '../types';
-
-// Needs to be externalized to some config file.
-const API_URL = 'https://drodriguln-maestro-api.herokuapp.com/artists/';
+import config from '../../config';
 
 export enum PlayerAction {
   SET_PLAYER_DATA = 'SET_PLAYER_DATA',
@@ -24,7 +22,7 @@ export const setPlayerData = (artist: Artist, album: Album, song: Song, playlist
 );
 
 export const fetchSongFileUrl = (artistId: string, albumId: string, songId: string) => (
-  (dispatch: Dispatch) => fetch(`${API_URL}${artistId}/albums/${albumId}/songs/${songId}/file`)
+  (dispatch: Dispatch) => fetch(`${config.apiUrl}${artistId}/albums/${albumId}/songs/${songId}/file`)
     .then((response) => response.blob())
     .then((blob) => dispatch({
       type: PlayerAction.SET_SONG_FILE_URL,
@@ -33,7 +31,7 @@ export const fetchSongFileUrl = (artistId: string, albumId: string, songId: stri
 );
 
 export const fetchArtworkFileUrl = (artistId: string, albumId: string, songId: string) => (
-  (dispatch: Dispatch) => fetch(`${API_URL}${artistId}/albums/${albumId}/songs/${songId}/artwork`)
+  (dispatch: Dispatch) => fetch(`${config.apiUrl}${artistId}/albums/${albumId}/songs/${songId}/artwork`)
     .then((response) => response.blob())
     .then((blob) => dispatch({
       type: PlayerAction.SET_ARTWORK_FILE_URL,

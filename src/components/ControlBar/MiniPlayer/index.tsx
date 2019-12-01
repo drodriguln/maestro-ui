@@ -64,7 +64,7 @@ class MiniPlayer extends React.Component<Props, State> {
     }
   }
 
-  getSnapshotBeforeUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     const {
       artist: prevArtist = {} as Artist, album: prevAlbum = {} as Album, song: prevSong = {} as Song,
     } = prevProps;
@@ -184,10 +184,7 @@ class MiniPlayer extends React.Component<Props, State> {
           <SkipNextIcon />
         </IconButton>
         <IconButton className={classes.popupPlayerButton} onClick={this.handleOpenPopupPlayer}>
-          <CardMedia
-            className={classes.artwork}
-            image={artworkFileUrl}
-          />
+          <CardMedia className={classes.artwork} image={artworkFileUrl} />
         </IconButton>
         <Popover
           open={popupPlayerAnchorEl != null}
